@@ -1,0 +1,404 @@
+import 'dart:developer';
+
+import 'package:app/pages/item_page.dart';
+import 'package:flutter/material.dart';
+import '../helpers/colors.dart';
+import '../theme/custom_theme.dart';
+import '../helpers/item.dart';
+import '../helpers/tre.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
+
+class MyHomePage extends StatefulWidget {
+  const MyHomePage({Key? key}) : super(key: key);
+
+  @override
+  State<MyHomePage> createState() => _MyHomePageState();
+}
+
+class _MyHomePageState extends State<MyHomePage> {
+  get primaryColor => CustomTheme.lightTheme.primaryColor;
+
+  List<HomeStore> _data = [];
+  List<BestSeller> bestSales = [];
+
+  Future<List<BestSeller>> fetchNotes() async {
+    
+    var response = await http.get(Uri.https('run.mocky.io', '/v3/654bd15e-b121-49ba-a588-960956b15175'));
+    List<HomeStore> data = [];
+    List<BestSeller> _bestSales = [];
+    _bestSales.clear();
+
+    if (response.statusCode == 200) {
+      var notes = json.decode(response.body);
+      
+      // for (var noteJson in notes['home_store']) {
+      //   data.add(HomeStore.fromJson(noteJson));
+      // }
+      for (var dataJson in notes['best_seller']) {
+        _bestSales.add(BestSeller.fromJson(dataJson));
+      }
+    }
+    return _bestSales;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    fetchNotes().then((value) {
+      bestSales.clear();
+      bestSales.addAll(value);
+    });
+    return Scaffold(
+      body: ListView(
+        children: [
+          Row(
+            children: [
+              const Spacer(flex: 2),
+              const Icon(
+                Icons.location_on_outlined,
+                color: AppColors.contrastColor,
+                size: 20,
+              ),
+              const Text(
+                'Zihuatanejo, Gro',
+                style: TextStyle(
+                  fontSize: 15,
+                  color: AppColors.secondaryColor
+                ),
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                softWrap: false,
+              ),
+              const Icon(
+                Icons.keyboard_arrow_down_outlined,
+                color: AppColors.subColor
+              ),
+              const Spacer(),
+              IconButton(
+                icon: const Icon(Icons.filter_alt_outlined, color: AppColors.secondaryColor),
+                  iconSize: 25,
+                  splashRadius: 25,
+                  onPressed: (){
+                    log('filter');
+                  },
+              )
+            ],
+          ),
+          Row(
+            children: const [
+              Spacer(),
+              Text(
+                'Select Category',
+                style: TextStyle(
+                  fontSize: 25,
+                  color:AppColors.secondaryColor,
+                  fontWeight: FontWeight.bold
+                ),
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                softWrap: false,
+              ),
+              Spacer(
+                flex: 6,
+              ),
+              Text(
+                'view all',
+                style: TextStyle(fontSize: 15, color: AppColors.contrastColor),
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                softWrap: false,
+              ),
+              Spacer(),
+            ],
+          ),
+          SizedBox(
+            height: 150,
+            child: ListView.builder(
+              padding: const EdgeInsets.only(top: 20, left: 0, right: 8, bottom: 0),
+              itemCount: category.length,
+              scrollDirection: Axis.horizontal,
+              itemBuilder: (BuildContext context, int index) {
+                return GestureDetector(
+                  child: Container(
+                    width: 75,
+                    margin: const EdgeInsets.only(left: 20),
+                    child: Column(
+                      children: <Widget>[
+                        ClipRRect(
+                          borderRadius: BorderRadius.circular(100),
+                          child: Container(
+                            width: 71,
+                            height: 71,
+                            color: (category[index].isActive == true) ? AppColors.contrastColor : AppColors.fillColor,
+                            child: Icon(
+                              category[index].icon,
+                              color: (category[index].isActive == true) ? AppColors.fillColor : AppColors.subColor
+                            ),
+                          ),
+                        ),
+                        const Padding(padding: EdgeInsets.only(top: 10)),
+                        Text(category[index].name,
+                          style: const TextStyle(
+                            fontSize: 12,
+                            // color: (category[index].isActive == true) ? AppColors.contrastColor : AppColors.primaryColor//AppColors.contrastColor
+                          ),
+                          overflow: TextOverflow.fade,
+                          maxLines: 1,
+                          softWrap: false
+                        )
+                      ],
+                    ),
+                  ),
+                  onTap: () {
+                    if (category[index].isActive == false) {
+                      setState(() {
+                        category[index].isActive = true;
+                      });
+                    }
+                    else {
+                      setState(() {
+                        category[index].isActive = false;
+                      });
+                    }
+                    log(category[index].isActive.toString());
+                  },
+                );
+              }
+            ),
+          ),
+          Row(
+            children: [
+              const Spacer(flex: 3),
+              SizedBox(
+                width: 300,
+                height: 45,
+                child: TextField(
+                  decoration: InputDecoration(
+                    labelText: "Search",
+                    labelStyle: const TextStyle(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w400,
+                      fontFamily: 'Mark Pro',
+                    ),
+                    prefixIcon: const Icon(
+                      Icons.search,
+                      color: AppColors.contrastColor
+                    ),
+                    filled: true,
+                    fillColor: AppColors.fillColor,
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(20),
+                      borderSide: const BorderSide(color: AppColors.contrastColor, width: 1.0),
+                    ),
+                    enabledBorder: const OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(100)),
+                      borderSide: BorderSide(color: AppColors.fillColor, width: 1.0),
+                    )
+                  ),
+                ),
+              ),
+              const Spacer(),
+              CircleAvatar(
+                radius: 20,
+                backgroundColor: AppColors.contrastColor,
+                child: IconButton(
+                  icon: const Icon(Icons.qr_code, color: AppColors.fillColor),
+                    iconSize: 25,
+                    splashRadius: 25,
+                    onPressed: (){
+                      log('qr');
+                    },
+                ),
+              ),
+              const Spacer(flex: 3),
+            ],
+          ),
+          const SizedBox(
+            height: 24,
+          ),
+          Row(
+            children: const [
+              Spacer(),
+              Text(
+                'Hot Sales',
+                style: TextStyle(
+                  fontSize: 25,
+                  color:AppColors.secondaryColor,
+                  fontWeight: FontWeight.bold
+                ),
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                softWrap: false,
+              ),
+              Spacer(
+                flex: 6,
+              ),
+              Text(
+                'see more',
+                style: TextStyle(fontSize: 15, color: AppColors.contrastColor),
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                softWrap: false,
+              ),
+              Spacer(),
+            ],
+          ),
+          const SizedBox(
+            height: 180,
+          ),
+          Row(
+            children: const [
+              Spacer(),
+              Text(
+                'Best seller',
+                style: TextStyle(
+                  fontSize: 25,
+                  color:AppColors.secondaryColor,
+                  fontWeight: FontWeight.bold
+                ),
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                softWrap: false,
+              ),
+              Spacer(
+                flex: 6,
+              ),
+              Text(
+                'see more',
+                style: TextStyle(
+                  fontSize: 15,
+                  fontFamily: 'Mark Pro',
+                  color: AppColors.contrastColor
+                ),
+                overflow: TextOverflow.fade,
+                maxLines: 1,
+                softWrap: false,
+              ),
+              Spacer(),
+            ],
+          ),
+          GestureDetector(
+          child: SizedBox(
+            child: GridView.builder(
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 5.0,
+                mainAxisSpacing: 5.0,
+              ),
+              padding: const EdgeInsets.only(top: 10, right: 10, bottom: 8),
+              itemCount: bestSales.length,
+              itemBuilder: (BuildContext context, int index) {
+                return ClipRRect(
+                  child: Container(
+                    width: 160,
+                    margin: const EdgeInsets.only(left: 20, right: 10),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(15),
+                      color: AppColors.fillColor,
+                    ),
+                    child: Column(
+                      children: <Widget>[
+                        Stack(
+                          alignment: Alignment.topRight,
+                          children: <Widget>[
+                            Image(
+                              fit: BoxFit.fitHeight,
+                              height: 150,
+                              width: 150,
+                              image: NetworkImage(bestSales[index].picture),
+                            ),
+                            CircleAvatar(
+                              radius: 15,
+                              backgroundColor: AppColors.fillColor,
+                              child: IconButton(
+                                iconSize: 15,
+                                splashRadius: 15,
+                                icon: (bestSales[index].isFavorites == true)
+                                ? const Icon(
+                                    Icons.favorite_outlined,
+                                    color: AppColors.contrastColor,
+                                  )
+                                : const Icon(
+                                    Icons.favorite_outline,
+                                    color: AppColors.contrastColor,
+                                  ),
+                                onPressed: () {
+                                  if (bestSales[index].isFavorites == false) {
+                                    setState(() {
+                                      bestSales[index].isFavorites = true;
+                                    });
+                                  } else {
+                                    setState(() {
+                                      bestSales[index].isFavorites = false;
+                                    });
+                                  }
+                                  log(bestSales[index].isFavorites.toString());
+                                },
+                              ),
+                            ),
+                          ]
+                        ),
+                        Row(
+                          children: [
+                            const Spacer(
+                              flex: 2,
+                            ),
+                            Text('\$${bestSales[index].discountPrice}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                color: AppColors.secondaryColor
+                              ),
+                              overflow: TextOverflow.fade,
+                              maxLines: 1,
+                              softWrap: false,
+                              textAlign: TextAlign.left,
+                            ),
+                            const Spacer(),
+                            Text('\$${bestSales[index].priceWithoutDiscount}',
+                              style: const TextStyle(
+                                fontSize: 11,
+                                color: AppColors.priceColor,
+                                decoration: TextDecoration.lineThrough
+                              ),
+                              overflow: TextOverflow.fade,
+                              maxLines: 1,
+                              softWrap: false,
+                              textAlign: TextAlign.left,
+                            ),
+                            const Spacer(
+                              flex: 4,
+                            ),
+                          ],
+                        ),
+                        Text(
+                          bestSales[index].title,
+                          style: const TextStyle(
+                            fontSize: 10,
+                            color: AppColors.secondaryColor
+                          ),
+                          overflow: TextOverflow.fade,
+                          maxLines: 1,
+                          softWrap: false,
+                          textAlign: TextAlign.left,
+                        ),
+                      ],
+                    ),
+                  ),
+                );
+              }
+            )
+          ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => MyItemPage()),
+            );
+          },
+        ),
+        ]
+      ),
+    );
+  }
+}
