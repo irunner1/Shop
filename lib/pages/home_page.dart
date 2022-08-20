@@ -8,6 +8,8 @@ import '../helpers/item.dart';
 import '../helpers/tre.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:carousel_slider/carousel_slider.dart';
+
 
 class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key}) : super(key: key);
@@ -19,22 +21,28 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   get primaryColor => CustomTheme.lightTheme.primaryColor;
 
-  List<HomeStore> _data = [];
+  List<HomeStore> hotSales = [];
   List<BestSeller> bestSales = [];
 
-  Future<List<BestSeller>> fetchNotes() async {
-    
+  Future fetchHotSales() async {
     var response = await http.get(Uri.https('run.mocky.io', '/v3/654bd15e-b121-49ba-a588-960956b15175'));
-    List<HomeStore> data = [];
-    List<BestSeller> _bestSales = [];
-    _bestSales.clear();
-
+    List<HomeStore> homeStore = [];
+    homeStore.clear();
     if (response.statusCode == 200) {
       var notes = json.decode(response.body);
-      
-      // for (var noteJson in notes['home_store']) {
-      //   data.add(HomeStore.fromJson(noteJson));
-      // }
+      for (var noteJson in notes['home_store']) {
+        homeStore.add(HomeStore.fromJson(noteJson));
+      }
+    }
+    return homeStore;
+  }
+  
+  Future<List<BestSeller>> fetchNotes() async {
+    var response = await http.get(Uri.https('run.mocky.io', '/v3/654bd15e-b121-49ba-a588-960956b15175'));
+    List<BestSeller> _bestSales = [];
+    _bestSales.clear();
+    if (response.statusCode == 200) {
+      var notes = json.decode(response.body);
       for (var dataJson in notes['best_seller']) {
         _bestSales.add(BestSeller.fromJson(dataJson));
       }
@@ -48,6 +56,30 @@ class _MyHomePageState extends State<MyHomePage> {
       bestSales.clear();
       bestSales.addAll(value);
     });
+    fetchHotSales().then((value) {
+      hotSales.clear();
+      hotSales.addAll(value);
+      log(hotSales.length.toString());
+    });
+    Widget buildImage(String urlImage, int index) => ClipRRect(
+      borderRadius: BorderRadius.circular(15),
+      child: Stack(
+        children: [
+          Image.network(
+            urlImage,
+            fit: BoxFit.cover,
+          ),
+          Positioned(
+            bottom: 100.0,
+            left: 10.0,
+            child: Container(
+              child: Text('a', style: TextStyle(color: Colors.white),),
+            )
+          )
+        ],
+      ),     
+    );
+
     return Scaffold(
       body: ListView(
         children: [
@@ -244,7 +276,27 @@ class _MyHomePageState extends State<MyHomePage> {
             ],
           ),
           const SizedBox(
-            height: 180,
+            height: 10,
+          ),
+          SizedBox(
+            height: 210,
+            child: Stack(
+              children: <Widget>[
+                CarouselSlider.builder(
+                  itemCount: hotSales.length,
+                  itemBuilder: ((context, index, realIndex) {
+                    final urlImage = hotSales[index].picture;
+                    return buildImage(urlImage, index);
+                  }),
+                  options: CarouselOptions(
+                    enlargeCenterPage: true,
+                    aspectRatio: 2.0,
+                    autoPlay: false,
+                    viewportFraction: 0.95
+                  )
+                )
+              ]
+            )
           ),
           Row(
             children: const [

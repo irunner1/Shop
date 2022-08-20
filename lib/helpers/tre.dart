@@ -4,13 +4,13 @@ class HomeStore {
   String subtitle;
   String picture;
   bool isBuy;
-  bool? isNew;
+  // bool isNew = false;
 
   HomeStore({
     required this.title,
     required this.subtitle,
     required this.picture,
-    required this.isNew,
+    // required this.isNew,
     required this.isBuy
   });
 
@@ -19,7 +19,7 @@ class HomeStore {
     subtitle: json['subtitle'] as String,
     picture: json['picture'] as String,
     isBuy: json['is_buy'] as bool,
-    isNew: json['is_new'] as bool,
+    // isNew: json['is_new'] as bool,
   );
 }
 
