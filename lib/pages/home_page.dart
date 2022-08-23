@@ -49,7 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     return _bestSales;
   }
-
+  
   @override
   Widget build(BuildContext context) {
     fetchNotes().then((value) {
@@ -285,8 +285,8 @@ class _MyHomePageState extends State<MyHomePage> {
                 CarouselSlider.builder(
                   itemCount: hotSales.length,
                   itemBuilder: ((context, index, realIndex) {
-                    final urlImage = hotSales[index].picture;
-                    return buildImage(urlImage, index);
+                    // final urlImage = hotSales[index].picture;
+                    return buildImage("urlImage", index);
                   }),
                   options: CarouselOptions(
                     enlargeCenterPage: true,

@@ -1,16 +1,18 @@
 
+import 'package:flutter/material.dart';
+
 class HomeStore {
   String title;
   String subtitle;
   String picture;
   bool isBuy;
-  // bool isNew = false;
+  bool? isNew;
 
   HomeStore({
     required this.title,
     required this.subtitle,
     required this.picture,
-    // required this.isNew,
+    this.isNew,
     required this.isBuy
   });
 
@@ -19,7 +21,7 @@ class HomeStore {
     subtitle: json['subtitle'] as String,
     picture: json['picture'] as String,
     isBuy: json['is_buy'] as bool,
-    // isNew: json['is_new'] as bool,
+    isNew: json['is_new'] as bool?,
   );
 }
 
@@ -55,7 +57,7 @@ class ProductDetails {
   List<String> images;
   bool isFavorites;
   int price;
-  String rating;
+  double rating;
   String sd;
   String ssd;
   String title;
@@ -74,17 +76,32 @@ class ProductDetails {
     required this.title,
   });
 
-  factory ProductDetails.fromJson(Map<String, dynamic> json) => ProductDetails(
-    cpu: json['CPU'] as String,
-    camera: json['camera'] as String,
-    capacity: json['capacity'] as List<int>,
-    color: json['color'] as List<String>,
-    images: json['images'] as List<String>,
-    isFavorites: json['isFavorites'] as bool,
-    price: json['price'] as int,
-    rating: json['rating'] as String,
-    sd: json['sd'] as String,
-    ssd: json['ssd'] as String,
-    title: json['title'] as String
-  );
+  factory ProductDetails.fromJson(Map<String, dynamic> json) {
+    var colorFromJson = json['color'];
+    List<String> colorList = colorFromJson.cast<String>();
+
+    var capacityFromJson = json['capacity'];
+    List<int> capacityList = capacityFromJson.cast<int>();
+
+    var imagesFromJson = json['images'];
+    List<String> imagesList = imagesFromJson.cast<String>();
+
+    return ProductDetails(
+      cpu: json['CPU'] as String,
+      camera: json['camera'] as String,
+      capacity: capacityList,
+      color: colorList,
+      images: imagesList,
+      isFavorites: json['isFavorites'] as bool,
+      price: json['price'] as int,
+      rating: json['rating'] as double,
+      sd: json['sd'] as String,
+      ssd: json['ssd'] as String,
+      title: json['title'] as String
+    );
+  }
+}
+
+Color hexToColor(String code) {
+  return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
 }
