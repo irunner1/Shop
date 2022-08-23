@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage> {
     return homeStore;
   }
   
-  Future fetchNotes() async {
+  Future fetchBestSales() async {
     var response = await http.get(Uri.https('run.mocky.io', '/v3/654bd15e-b121-49ba-a588-960956b15175'));
     List<BestSeller> bestSale = [];
     bestSale.clear();
@@ -53,7 +53,7 @@ class _MyHomePageState extends State<MyHomePage> {
   @override
   void initState() {
     super.initState();
-    fetchNotes().then((value) {
+    fetchBestSales().then((value) {
       bestSales.clear();
       bestSales.addAll(value);
     });
@@ -69,21 +69,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
     Widget buildImage(String urlImage, int index) => ClipRRect(
       borderRadius: BorderRadius.circular(15),
-      child: Stack(
-        children: [
-          Image.network(
-            urlImage,
-            fit: BoxFit.cover,
-          ),
-          Positioned(
-            bottom: 100.0,
-            left: 10.0,
-            child: Container(
-              child: Text('a', style: TextStyle(color: Colors.white),),
-            )
-          )
-        ],
-      ),
+      child: Image(image: NetworkImage(urlImage),fit: BoxFit.cover)
     );
 
     return Scaffold(
@@ -175,7 +161,8 @@ class _MyHomePageState extends State<MyHomePage> {
                           ),
                         ),
                         const Padding(padding: EdgeInsets.only(top: 10)),
-                        Text(category[index].name,
+                        Text(
+                          category[index].name,
                           style: const TextStyle(
                             fontSize: 12,
                             // color: (category[index].isActive == true) ? AppColors.contrastColor : AppColors.primaryColor//AppColors.contrastColor
@@ -188,17 +175,17 @@ class _MyHomePageState extends State<MyHomePage> {
                     ),
                   ),
                   onTap: () {
-                    if (category[index].isActive == false) {
-                      setState(() {
-                        category[index].isActive = true;
-                      });
-                    }
-                    else {
-                      setState(() {
-                        category[index].isActive = false;
-                      });
-                    }
-                    log(category[index].isActive.toString());
+                    // if (category[index].isActive == false) {
+                    //   setState(() {
+                    //     category[index].isActive = true;
+                    //   });
+                    // }
+                    // else {
+                    //   setState(() {
+                    //     category[index].isActive = false;
+                    //   });
+                    // }
+                    // log(category[index].isActive.toString());
                   },
                 );
               }
@@ -285,7 +272,7 @@ class _MyHomePageState extends State<MyHomePage> {
             height: 10,
           ),
           FutureBuilder(
-            future: fetchHotSales(),
+            future: fetchBestSales(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const Center(child: CircularProgressIndicator());
@@ -304,8 +291,9 @@ class _MyHomePageState extends State<MyHomePage> {
                         options: CarouselOptions(
                           enlargeCenterPage: true,
                           aspectRatio: 2.0,
-                          autoPlay: false,
-                          viewportFraction: 0.95
+                          // autoPlay: false,
+                          viewportFraction: 0.9,
+                          height: 200
                         )
                       )
                     ]
@@ -368,7 +356,7 @@ class _MyHomePageState extends State<MyHomePage> {
                       itemBuilder: (BuildContext context, int index) {
                         return ClipRRect(
                           child: Container(
-                            width: 160,
+                            width: 170,
                             margin: const EdgeInsets.only(left: 20, right: 10),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(15),

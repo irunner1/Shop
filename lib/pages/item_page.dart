@@ -23,8 +23,7 @@ class _MyItemPageState extends State<MyItemPage> {
     List<ProductDetails> productDetails = [];
     if (response.statusCode == 200) {
       var notes = json.decode(response.body);
-      ProductDetails productDetail = ProductDetails.fromJson(notes);
-      productDetails.add(productDetail);
+      productDetails.add(ProductDetails.fromJson(notes));
     }
     return productDetails;
   }
