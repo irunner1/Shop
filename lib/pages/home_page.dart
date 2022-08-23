@@ -37,21 +37,22 @@ class _MyHomePageState extends State<MyHomePage> {
     return homeStore;
   }
   
-  Future<List<BestSeller>> fetchNotes() async {
+  Future fetchNotes() async {
     var response = await http.get(Uri.https('run.mocky.io', '/v3/654bd15e-b121-49ba-a588-960956b15175'));
-    List<BestSeller> _bestSales = [];
-    _bestSales.clear();
+    List<BestSeller> bestSale = [];
+    bestSale.clear();
     if (response.statusCode == 200) {
       var notes = json.decode(response.body);
       for (var dataJson in notes['best_seller']) {
-        _bestSales.add(BestSeller.fromJson(dataJson));
+        bestSale.add(BestSeller.fromJson(dataJson));
       }
     }
-    return _bestSales;
+    return bestSale;
   }
   
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    super.initState();
     fetchNotes().then((value) {
       bestSales.clear();
       bestSales.addAll(value);
@@ -61,6 +62,11 @@ class _MyHomePageState extends State<MyHomePage> {
       hotSales.addAll(value);
       log(hotSales.length.toString());
     });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+
     Widget buildImage(String urlImage, int index) => ClipRRect(
       borderRadius: BorderRadius.circular(15),
       child: Stack(
@@ -278,25 +284,36 @@ class _MyHomePageState extends State<MyHomePage> {
           const SizedBox(
             height: 10,
           ),
-          SizedBox(
-            height: 210,
-            child: Stack(
-              children: <Widget>[
-                CarouselSlider.builder(
-                  itemCount: hotSales.length,
-                  itemBuilder: ((context, index, realIndex) {
-                    // final urlImage = hotSales[index].picture;
-                    return buildImage("urlImage", index);
-                  }),
-                  options: CarouselOptions(
-                    enlargeCenterPage: true,
-                    aspectRatio: 2.0,
-                    autoPlay: false,
-                    viewportFraction: 0.95
+          FutureBuilder(
+            future: fetchHotSales(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasData) {
+                return SizedBox(
+                  height: 210,
+                  child: Stack(
+                    children: <Widget>[
+                      CarouselSlider.builder(
+                        itemCount: hotSales.length,
+                        itemBuilder: ((context, index, realIndex) {
+                          final urlImage = hotSales[index].picture;
+                          return buildImage(urlImage, index);
+                        }),
+                        options: CarouselOptions(
+                          enlargeCenterPage: true,
+                          aspectRatio: 2.0,
+                          autoPlay: false,
+                          viewportFraction: 0.95
+                        )
+                      )
+                    ]
                   )
-                )
-              ]
-            )
+                );
+              }
+              return const Center(child: Text("no info"));
+            },
           ),
           Row(
             children: const [
@@ -329,126 +346,137 @@ class _MyHomePageState extends State<MyHomePage> {
               Spacer(),
             ],
           ),
-          GestureDetector(
-          child: SizedBox(
-            child: GridView.builder(
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                crossAxisCount: 2,
-                crossAxisSpacing: 5.0,
-                mainAxisSpacing: 5.0,
-              ),
-              padding: const EdgeInsets.only(top: 10, right: 10, bottom: 8),
-              itemCount: bestSales.length,
-              itemBuilder: (BuildContext context, int index) {
-                return ClipRRect(
-                  child: Container(
-                    width: 160,
-                    margin: const EdgeInsets.only(left: 20, right: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(15),
-                      color: AppColors.fillColor,
-                    ),
-                    child: Column(
-                      children: <Widget>[
-                        Stack(
-                          alignment: Alignment.topRight,
-                          children: <Widget>[
-                            Image(
-                              fit: BoxFit.fitHeight,
-                              height: 150,
-                              width: 150,
-                              image: NetworkImage(bestSales[index].picture),
+          FutureBuilder(
+            future: fetchHotSales(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator());
+              }
+              if (snapshot.hasData) {
+                return GestureDetector(
+                  child: SizedBox(
+                    child: GridView.builder(
+                      physics: const NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                      gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 5.0,
+                        mainAxisSpacing: 5.0,
+                      ),
+                      padding: const EdgeInsets.only(top: 10, right: 10, bottom: 8),
+                      itemCount: bestSales.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return ClipRRect(
+                          child: Container(
+                            width: 160,
+                            margin: const EdgeInsets.only(left: 20, right: 10),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(15),
+                              color: AppColors.fillColor,
                             ),
-                            CircleAvatar(
-                              radius: 15,
-                              backgroundColor: AppColors.fillColor,
-                              child: IconButton(
-                                iconSize: 15,
-                                splashRadius: 15,
-                                icon: (bestSales[index].isFavorites == true)
-                                ? const Icon(
-                                    Icons.favorite_outlined,
-                                    color: AppColors.contrastColor,
-                                  )
-                                : const Icon(
-                                    Icons.favorite_outline,
-                                    color: AppColors.contrastColor,
+                            child: Column(
+                              children: <Widget>[
+                                Stack(
+                                  alignment: Alignment.topRight,
+                                  children: <Widget>[
+                                    Image(
+                                      fit: BoxFit.fitHeight,
+                                      height: 150,
+                                      width: 150,
+                                      image: NetworkImage(bestSales[index].picture),
+                                    ),
+                                    CircleAvatar(
+                                      radius: 15,
+                                      backgroundColor: AppColors.fillColor,
+                                      child: IconButton(
+                                        iconSize: 15,
+                                        splashRadius: 15,
+                                        icon: (bestSales[index].isFavorites == true)
+                                        ? const Icon(
+                                            Icons.favorite_outlined,
+                                            color: AppColors.contrastColor,
+                                          )
+                                        : const Icon(
+                                            Icons.favorite_outline,
+                                            color: AppColors.contrastColor,
+                                          ),
+                                        onPressed: () {
+                                          if (bestSales[index].isFavorites == false) {
+                                            setState(() {
+                                              bestSales[index].isFavorites = true;
+                                            });
+                                          } else {
+                                            setState(() {
+                                              bestSales[index].isFavorites = false;
+                                            });
+                                          }
+                                          log(bestSales[index].isFavorites.toString());
+                                        },
+                                      ),
+                                    ),
+                                  ]
+                                ),
+                                Row(
+                                  children: [
+                                    const Spacer(
+                                      flex: 2,
+                                    ),
+                                    Text('\$${bestSales[index].discountPrice}',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        color: AppColors.secondaryColor
+                                      ),
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 1,
+                                      softWrap: false,
+                                      textAlign: TextAlign.left,
+                                    ),
+                                    const Spacer(),
+                                    Text('\$${bestSales[index].priceWithoutDiscount}',
+                                      style: const TextStyle(
+                                        fontSize: 11,
+                                        color: AppColors.priceColor,
+                                        decoration: TextDecoration.lineThrough
+                                      ),
+                                      overflow: TextOverflow.fade,
+                                      maxLines: 1,
+                                      softWrap: false,
+                                      textAlign: TextAlign.left,
+                                    ),
+                                    const Spacer(
+                                      flex: 4,
+                                    ),
+                                  ],
+                                ),
+                                Text(
+                                  bestSales[index].title,
+                                  style: const TextStyle(
+                                    fontSize: 10,
+                                    color: AppColors.secondaryColor
                                   ),
-                                onPressed: () {
-                                  if (bestSales[index].isFavorites == false) {
-                                    setState(() {
-                                      bestSales[index].isFavorites = true;
-                                    });
-                                  } else {
-                                    setState(() {
-                                      bestSales[index].isFavorites = false;
-                                    });
-                                  }
-                                  log(bestSales[index].isFavorites.toString());
-                                },
-                              ),
+                                  overflow: TextOverflow.fade,
+                                  maxLines: 1,
+                                  softWrap: false,
+                                  textAlign: TextAlign.left,
+                                ),
+                              ],
                             ),
-                          ]
-                        ),
-                        Row(
-                          children: [
-                            const Spacer(
-                              flex: 2,
-                            ),
-                            Text('\$${bestSales[index].discountPrice}',
-                              style: const TextStyle(
-                                fontSize: 16,
-                                color: AppColors.secondaryColor
-                              ),
-                              overflow: TextOverflow.fade,
-                              maxLines: 1,
-                              softWrap: false,
-                              textAlign: TextAlign.left,
-                            ),
-                            const Spacer(),
-                            Text('\$${bestSales[index].priceWithoutDiscount}',
-                              style: const TextStyle(
-                                fontSize: 11,
-                                color: AppColors.priceColor,
-                                decoration: TextDecoration.lineThrough
-                              ),
-                              overflow: TextOverflow.fade,
-                              maxLines: 1,
-                              softWrap: false,
-                              textAlign: TextAlign.left,
-                            ),
-                            const Spacer(
-                              flex: 4,
-                            ),
-                          ],
-                        ),
-                        Text(
-                          bestSales[index].title,
-                          style: const TextStyle(
-                            fontSize: 10,
-                            color: AppColors.secondaryColor
                           ),
-                          overflow: TextOverflow.fade,
-                          maxLines: 1,
-                          softWrap: false,
-                          textAlign: TextAlign.left,
-                        ),
-                      ],
-                    ),
+                        );
+                      }
+                    )
                   ),
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => const MyItemPage()),
+                    );
+                  },
                 );
               }
-            )
-          ),
-          onTap: () {
-            Navigator.push(
-              context,
-              MaterialPageRoute(builder: (context) => MyItemPage()),
-            );
-          },
-        ),
+              return const Center(child: Text("no info"));
+            },
+          )
         ]
       ),
     );
