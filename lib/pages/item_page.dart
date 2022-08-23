@@ -8,9 +8,7 @@ class MyItemPage extends StatelessWidget {
   const MyItemPage({Key? key}) : super(key: key);
 
   @override
-  Widget build(BuildContext context) {
-    TabController _tabController;
-    
+  Widget build(BuildContext context) {    
     Widget buildImage(String urlImage, int index) => ClipRRect(
       borderRadius: BorderRadius.circular(15),
       child: Stack(
@@ -46,13 +44,13 @@ class MyItemPage extends StatelessWidget {
                 child: Container(
                   height: 35,
                   width: 35,
-                  padding: EdgeInsets.only(left: 10),
+                  padding: const EdgeInsets.only(left: 10),
                   decoration: BoxDecoration(
                     shape: BoxShape.rectangle,
                     color: AppColors.secondaryColor,
                     borderRadius: BorderRadius.circular(10),
                   ),
-                  child: Icon(Icons.arrow_back_ios, color: AppColors.fillColor),
+                  child: const Icon(Icons.arrow_back_ios, color: AppColors.fillColor),
                 ),
                 onTap: () {
                   Navigator.pop(context);
