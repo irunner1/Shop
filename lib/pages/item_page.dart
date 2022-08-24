@@ -54,7 +54,7 @@ class _MyItemPageState extends State<MyItemPage> {
     return Scaffold(
       body: FutureBuilder(
         future: fetchProductDetails(),
-        builder: (context, AsyncSnapshot  snapshot) {
+        builder: (context, AsyncSnapshot snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
@@ -357,9 +357,9 @@ class _MyItemPageState extends State<MyItemPage> {
                       Row(
                         children: [
                           const Spacer(),
-                          // CircleAvatar(backgroundColor: hexToColor(productDetails[0].color[0])),
+                          CircleAvatar(backgroundColor: hexToColor(productDetails[0].color[0])),
                           const Spacer(),
-                          // CircleAvatar(backgroundColor: hexToColor(productDetails[0].color[1])),
+                          CircleAvatar(backgroundColor: hexToColor(productDetails[0].color[1])),
                           const Spacer(flex: 2),
                           // Text(productDetails[0].capacity[0].toString()),
                           const Spacer(),

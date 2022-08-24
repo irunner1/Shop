@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:app/pages/item_page.dart';
 import 'package:http/http.dart' as http;
@@ -74,7 +75,82 @@ class _MyHomePageState extends State<MyHomePage> {
 
     Widget buildImage(String urlImage, int index) => ClipRRect(
       borderRadius: BorderRadius.circular(15),
-      child: Image(image: NetworkImage(urlImage),fit: BoxFit.cover)
+      // child: Image(image: NetworkImage(urlImage),fit: BoxFit.cover)
+      child: Stack(
+        alignment: Alignment.topLeft,
+        
+        children: <Widget>[
+          Container(
+            alignment: Alignment.center,
+            child: Image.network(
+              urlImage,
+              height: 250,
+              width: double.infinity,
+              fit: BoxFit.cover,
+            ),
+          ),
+          (hotSales[index].isNew == true)
+            ? Container(
+              padding: const EdgeInsets.all(20),
+              child: const CircleAvatar(
+                backgroundColor: AppColors.contrastColor,
+                child: Text(
+                  'New',
+                  style: TextStyle(
+                    color: AppColors.fillColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 12
+                  ),
+                ),
+              ),
+            )
+            : const Icon(
+                Icons.favorite_outline,
+                color: Colors.transparent,
+              ),
+          Container(
+            padding: const EdgeInsets.only(left: 20, top: 70),
+            alignment: Alignment.centerLeft,
+            child: Column(
+              children: [
+                Text(
+                  hotSales[index].title,
+                  style: const TextStyle(
+                    color: AppColors.fillColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 25
+                  ),
+                ),
+                Text(
+                  hotSales[index].subtitle,
+                  style: const TextStyle(
+                    color: AppColors.fillColor,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 11
+                  ),
+                ),
+                const Spacer(),
+                TextButton(
+                  style: TextButton.styleFrom(                    
+                    backgroundColor: AppColors.fillColor,
+                    padding: const EdgeInsets.only(left: 40, right: 40),
+                  ),
+                  onPressed: null,
+                  child: const Text(
+                    'Buy now!',
+                    style: TextStyle(
+                      color: AppColors.secondaryColor,
+                      fontSize: 11,
+                      fontWeight: FontWeight.bold
+                    ),
+                  ),
+                ),
+                const Spacer(),
+              ],
+            )
+          ),
+        ],
+      ),
     );
 
     return GestureDetector(
@@ -283,10 +359,13 @@ class _MyHomePageState extends State<MyHomePage> {
               height: 10,
             ),
             FutureBuilder(
-              future: fetchBestSales(),
-              builder: (context, snapshot) {
+              future: fetchHotSales(),
+              builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
+                }
+                if (hotSales.isEmpty) {
+                  hotSales.addAll(snapshot.data);
                 }
                 if (snapshot.hasData) {
                   return SizedBox(
@@ -302,11 +381,10 @@ class _MyHomePageState extends State<MyHomePage> {
                           options: CarouselOptions(
                             enlargeCenterPage: true,
                             aspectRatio: 2.0,
-                            // autoPlay: false,
                             viewportFraction: 0.9,
-                            height: 200
+                            height: 200,
                           )
-                        )
+                        ),
                       ]
                     )
                   );
@@ -346,10 +424,13 @@ class _MyHomePageState extends State<MyHomePage> {
               ],
             ),
             FutureBuilder(
-              future: fetchHotSales(),
-              builder: (context, snapshot) {
+              future: fetchBestSales(),
+              builder: (context, AsyncSnapshot snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
+                }
+                if (bestSales.isEmpty) {
+                  bestSales.addAll(snapshot.data);
                 }
                 if (snapshot.hasData) {
                   return GestureDetector(
@@ -379,10 +460,39 @@ class _MyHomePageState extends State<MyHomePage> {
                                     alignment: Alignment.topRight,
                                     children: <Widget>[
                                       Image(
-                                        fit: BoxFit.fitHeight,
-                                        height: 150,
-                                        width: 150,
-                                        image: NetworkImage(bestSales[index].picture),
+                                          fit: BoxFit.fitHeight,
+                                          height: 150,
+                                          width: 150,
+                                          image: NetworkImage(bestSales[index].picture),
+                                        ),
+                                      CachedNetworkImage(
+                                        imageUrl: bestSales[index].picture,
+                                         height: 150,
+                                          width: 150,
+                                          fit: BoxFit.fitHeight,
+                                        // placeholder: (context, url) => CircularProgressIndicator(),
+                                        // errorWidget: (context, url, error) => Icon(Icons.error),
+                                        // imageBuilder: (context, imageProvider) => Container(
+                                        //   decoration: BoxDecoration(
+                                        //     image: DecorationImage(
+                                        //         image: imageProvider,
+                                        //         fit: BoxFit.cover,
+                                        //         colorFilter:
+                                        //             ColorFilter.mode(Colors.red, BlendMode.colorBurn)),
+                                        //   ),
+                                        // ),
+                                        // Image(
+                                        //   fit: BoxFit.fitHeight,
+                                        //   height: 150,
+                                        //   width: 150,
+                                        //   image: NetworkImage(bestSales[index].picture),
+                                        // ),
+                                        // Image(
+                                        //   fit: BoxFit.fitHeight,
+                                        //   height: 150,
+                                        //   width: 150,
+                                        //   image: NetworkImage(bestSales[index].picture),
+                                        // ),
                                       ),
                                       CircleAvatar(
                                         radius: 15,
