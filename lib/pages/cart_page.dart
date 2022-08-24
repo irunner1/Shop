@@ -53,7 +53,7 @@ List<Cart> cartData = [];
                   child: const Icon(Icons.arrow_back_ios, color: AppColors.fillColor),
                 ),
                 onTap: () {
-                  Navigator.pop(context);
+                  Navigator.pop(context, 0);
                 },
               ),
               const Spacer(flex: 3),

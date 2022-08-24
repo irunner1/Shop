@@ -1,5 +1,4 @@
-import 'package:app/pages/cart_page.dart';
-import 'package:app/pages/home_page.dart';
+import 'package:app/main_page.dart';
 import 'package:flutter/material.dart';
 import 'theme/custom_theme.dart';
 
@@ -16,7 +15,7 @@ class MyApp extends StatelessWidget {
       title: 'ECOMMERCE',
       debugShowCheckedModeBanner: false,
       theme: CustomTheme.lightTheme,
-      home: const MyCart(),
+      home: const MyMain(),
     );
   }
 }
