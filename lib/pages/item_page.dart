@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
@@ -17,29 +19,23 @@ class MyItemPage extends StatefulWidget {
 
 class _MyItemPageState extends State<MyItemPage> {
   List<ProductDetails> productDetails = [];
-
+  
   Future fetchProductDetails() async {
     var response = await http.get(Uri.https('run.mocky.io', '/v3/6c14c560-15c6-4248-b9d2-b4508df7d4f5'));
-    List<ProductDetails> productDetails = [];
+    List<ProductDetails> products = [];
     if (response.statusCode == 200) {
       var notes = json.decode(response.body);
-      productDetails.add(ProductDetails.fromJson(notes));
+      products.add(ProductDetails.fromJson(notes));
     }
-    return productDetails;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    fetchProductDetails().then((value) {
-      productDetails.clear();
-      productDetails.addAll(value);
-    });
+    return products;
   }
 
   @override
   Widget build(BuildContext context) {  
-
+    // fetchProductDetails().then((value) {
+    //   // productDetails.clear();
+    //   productDetails.addAll(value);
+    // });
     Widget buildImage(String urlImage, int index) => ClipRRect(
       borderRadius: BorderRadius.circular(15),
       child: Stack(
@@ -58,11 +54,14 @@ class _MyItemPageState extends State<MyItemPage> {
     return Scaffold(
       body: FutureBuilder(
         future: fetchProductDetails(),
-        builder: (context, snapshot) {
+        builder: (context, AsyncSnapshot  snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           }
-          if (snapshot.hasData) {
+          if (productDetails.isEmpty) {
+            productDetails.addAll(snapshot.data);
+          }
+          if (productDetails.isNotEmpty) {
             return ListView(
               physics: const NeverScrollableScrollPhysics(),
               children: [
@@ -358,9 +357,9 @@ class _MyItemPageState extends State<MyItemPage> {
                       Row(
                         children: [
                           const Spacer(),
-                          CircleAvatar(backgroundColor: hexToColor(productDetails[0].color[0])),
+                          // CircleAvatar(backgroundColor: hexToColor(productDetails[0].color[0])),
                           const Spacer(),
-                          CircleAvatar(backgroundColor: hexToColor(productDetails[0].color[1])),
+                          // CircleAvatar(backgroundColor: hexToColor(productDetails[0].color[1])),
                           const Spacer(flex: 2),
                           // Text(productDetails[0].capacity[0].toString()),
                           const Spacer(),
