@@ -9,4 +9,5 @@ class AppColors{
   static const Color priceColor = Color(0xffCCCCCC);
   static const Color iconColor = Color(0xffB7B7B7);
   static const Color itembackColor = Color(0xffF8F8F8);
+  static const Color cartColor = Color(0xff282843);
 }

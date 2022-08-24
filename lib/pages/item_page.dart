@@ -32,17 +32,10 @@ class _MyItemPageState extends State<MyItemPage> {
 
   @override
   Widget build(BuildContext context) {  
-    // fetchProductDetails().then((value) {
-    //   // productDetails.clear();
-    //   productDetails.addAll(value);
-    // });
     Widget buildImage(String urlImage, int index) => ClipRRect(
       borderRadius: BorderRadius.circular(15),
       child: Stack(
         children: [
-          // Container(
-          //   color: Colors.grey,
-          // )
           Image.network(
             urlImage,
             fit: BoxFit.cover,
@@ -356,14 +349,14 @@ class _MyItemPageState extends State<MyItemPage> {
                       const SizedBox(height: 10,),
                       Row(
                         children: [
-                          const Spacer(),
+                          const Spacer(flex: 2,),
                           CircleAvatar(backgroundColor: hexToColor(productDetails[0].color[0])),
                           const Spacer(),
                           CircleAvatar(backgroundColor: hexToColor(productDetails[0].color[1])),
                           const Spacer(flex: 2),
-                          // Text(productDetails[0].capacity[0].toString()),
+                          Text('${productDetails[0].capacity[0]} gb'),
                           const Spacer(),
-                          // Text(productDetails[0].capacity[1].toString()),
+                          Text('${productDetails[0].capacity[1]} gb'),
                           const Spacer(flex: 2),
                         ],
                       ),

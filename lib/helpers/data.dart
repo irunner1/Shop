@@ -51,7 +51,7 @@ class BestSeller {
 class ProductDetails {
   String cpu;
   String camera;
-  List<int> capacity;
+  List<String> capacity;
   List<String> color;
   List<String> images;
   bool isFavorites;
@@ -80,7 +80,7 @@ class ProductDetails {
     List<String> colorList = colorFromJson.cast<String>();
 
     var capacityFromJson = json['capacity'];
-    List<int> capacityList = capacityFromJson.cast<int>();
+    List<String> capacityList = capacityFromJson.cast<String>();
 
     var imagesFromJson = json['images'];
     List<String> imagesList = imagesFromJson.cast<String>();
