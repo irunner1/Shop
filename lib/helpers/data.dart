@@ -101,6 +101,47 @@ class ProductDetails {
   }
 }
 
+class Cart {
+  List<Basket> products;
+  String delivery;
+  int totalPrice;
+
+  Cart ({
+    required this.products,
+    required this.delivery,
+    required this.totalPrice
+  });
+
+  factory Cart.fromJson(Map <String, dynamic> json) {
+    var list = json['basket'] as List;
+    List<Basket> data = list.map((i) => Basket.fromJson(i)).toList();
+
+    return Cart(
+      products: data,
+      delivery: json['delivery'] as String,
+      totalPrice: json['total'] as int
+    );
+  }
+}
+
+class Basket {
+  String image;
+  int price;
+  String title;
+
+  Basket({
+    required this.image,
+    required this.price,
+    required this.title
+  });
+
+   factory Basket.fromJson(Map <String, dynamic> json) => Basket(
+      image: json['images'] as String,
+      price: json['price'] as int,
+      title: json['title'] as String,
+   );
+}
+
 Color hexToColor(String code) {
   return Color(int.parse(code.substring(1, 7), radix: 16) + 0xFF000000);
 }
