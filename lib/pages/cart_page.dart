@@ -133,22 +133,24 @@ List<Cart> cartData = [];
                           itemCount: 2,
                           itemBuilder: (BuildContext context, int index) {
                             return Container(
-                              padding: const EdgeInsets.only(bottom: 45, left: 20, right: 20),
+                              padding: const EdgeInsets.only(bottom: 45, left: 20, right: 10),
                               child: Row(
                                 children: [
                                   ClipRRect(
                                     borderRadius: BorderRadius.circular(5),
                                     child: Image.network(
                                       cartData[0].products[index].image,
-                                      fit: BoxFit.cover,
+                                      fit: BoxFit.fitHeight,
                                       width: 105,
                                       height: 105,
                                     ),
                                   ),
                                   const Spacer(),
-                                  SizedBox(
-                                    width: 160,
+                                  Container(
+                                    width: 180,
+                                    padding: const EdgeInsets.all(10),
                                     child: Column(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
                                       children: [
                                         Text(
                                           cartData[0].products[index].title,
@@ -167,7 +169,7 @@ List<Cart> cartData = [];
                                             color: AppColors.contrastColor,
                                             fontSize: 20,
                                           ),
-                                          
+                                          textAlign: TextAlign.left,
                                         ),
                                       ],
                                     ),
@@ -180,19 +182,19 @@ List<Cart> cartData = [];
                                       borderRadius: BorderRadius.circular(15),
                                     ),
                                     child: Column(
-                                      children: [
-                                        const Icon(
+                                      children: const [
+                                        Icon(
                                           Icons.remove, 
                                           color: AppColors.fillColor
                                         ),
                                         Text(
-                                          cartData[0].products.length.toString(),
-                                          style: const TextStyle(
+                                          '1',
+                                          style: TextStyle(
                                             color: AppColors.fillColor,
                                             fontSize: 20,
                                           ),
                                         ),
-                                        const Icon(
+                                        Icon(
                                           Icons.add,
                                           color: AppColors.fillColor,
                                         )
@@ -210,73 +212,81 @@ List<Cart> cartData = [];
                         )
                       ),
                       const Divider(
-                        height: 2,
-                        thickness: 1,
+                        height: 1,
+                        thickness: 2,
                         indent: 2,
                         endIndent: 2,
-                        color: Colors.white,
+                        color: AppColors.dividerColor,  
                       ),
                       Container(
-                        // height: 200,
                         padding: const EdgeInsets.all(20),
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Column(
-                              children: const [
-                                Text(
-                                  'Total',
-                                  style: TextStyle(
-                                    color: AppColors.fillColor,
-                                    fontSize: 15,
+                            Container(
+                              padding: const EdgeInsets.only(left: 30),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: const [
+                                  Text(
+                                    'Total',
+                                    style: TextStyle(
+                                      color: AppColors.fillColor,
+                                      fontSize: 15,
+                                    ),
+                                    textAlign: TextAlign.left,
                                   ),
-                                  textAlign: TextAlign.left,
-                                ),
-                                SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  'Delivery',
-                                  style: TextStyle(
-                                    color: AppColors.fillColor,
-                                    fontSize: 15
+                                  SizedBox(
+                                    height: 10,
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    'Delivery',
+                                    style: TextStyle(
+                                      color: AppColors.fillColor,
+                                      fontSize: 15
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
-                            Column(
-                              children: [
-                                Text(
-                                  '\$${cartData[0].totalPrice} us',
-                                  style: const TextStyle(
-                                    color: AppColors.fillColor,
-                                    fontSize: 20
+                            const Spacer(),
+                            Container(
+                              padding: const EdgeInsets.only(right: 30),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    '\$${cartData[0].totalPrice} us',
+                                    style: const TextStyle(
+                                      color: AppColors.fillColor,
+                                      fontSize: 20
+                                    ),
                                   ),
-                                ),
-                                const SizedBox(
-                                  height: 10,
-                                ),
-                                Text(
-                                  cartData[0].delivery,
-                                  style: const TextStyle(
-                                    color: AppColors.fillColor,
-                                    fontSize: 20
+                                  const SizedBox(
+                                    height: 10,
                                   ),
-                                ),
-                              ],
+                                  Text(
+                                    cartData[0].delivery,
+                                    style: const TextStyle(
+                                      color: AppColors.fillColor,
+                                      fontSize: 20
+                                    ),
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
                       ),
                       const Divider(
-                        height: 3,
+                        height: 1,
                         thickness: 1,
                         indent: 2,
                         endIndent: 2,
-                        color: Colors.white,
+                        color: AppColors.dividerColor,  
                       ),
                       Container(
                         height: 80,
+                        width: 500,
                         padding: const EdgeInsets.only(left: 50, right: 50, top: 10, bottom: 20),
                         child: TextButton(
                           style: TextButton.styleFrom(                    
