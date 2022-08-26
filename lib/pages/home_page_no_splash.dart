@@ -9,21 +9,16 @@ import '../helpers/colors.dart';
 import '../helpers/item.dart';
 import '../helpers/data.dart';
 import 'dart:convert';
-import 'package:app/pages/splash_screen.dart';
-
-import 'package:google_nav_bar/google_nav_bar.dart';
-import '../helpers/colors.dart';
-import 'package:app/pages/cart_page.dart';
 
 
-class MyTMP extends StatefulWidget {
-  const MyTMP({Key? key}) : super(key: key);
+class MyHome extends StatefulWidget {
+  const MyHome({Key? key}) : super(key: key);
 
   @override
-  State<MyTMP> createState() => _MyTMPState();
+  State<MyHome> createState() => _MyHomeState();
 }
 
-class _MyTMPState extends State<MyTMP> {
+class _MyHomeState extends State<MyHome> {
 
   List<HomeStore> hotSales = [];
   List<BestSeller> bestSales = [];
@@ -158,24 +153,7 @@ class _MyTMPState extends State<MyTMP> {
       ),
     );
 
-    return FutureBuilder<List<dynamic>>(
-        future: Future.wait([
-          fetchBestSales(),
-          fetchHotSales(),
-        ]),
-        builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            // return const Center(child: CircularProgressIndicator());
-            return const MySplash();
-          }
-          if (bestSales.isEmpty) {
-            bestSales.addAll(snapshot.data); //возможно вызовет ошибки 
-          }
-          if (hotSales.isEmpty) {
-            hotSales.addAll(snapshot.data); //либо snapshot сам понимает, куда отправить данные по названию массива
-          }
-          if (bestSales.isNotEmpty) {
-            return GestureDetector(
+    return GestureDetector(
       onTap: (() {
         node.unfocus();
       }),
@@ -260,10 +238,10 @@ class _MyTMPState extends State<MyTMP> {
                             child: Container(
                               width: 71,
                               height: 71,
-                              color: (category[index].isActive == true) ? AppColors.contrastColor : AppColors.fillColor,
+                              color: AppColors.contrastColor,
                               child: Icon(
                                 category[index].icon,
-                                color: (category[index].isActive == true) ? AppColors.fillColor : AppColors.subColor
+                                color: AppColors.fillColor
                               ),
                             ),
                           ),
@@ -272,7 +250,6 @@ class _MyTMPState extends State<MyTMP> {
                             category[index].name,
                             style: const TextStyle(
                               fontSize: 12,
-                              // color: (category[index].isActive == true) ? AppColors.contrastColor : AppColors.primaryColor//AppColors.contrastColor
                             ),
                             overflow: TextOverflow.fade,
                             maxLines: 1,
@@ -282,17 +259,6 @@ class _MyTMPState extends State<MyTMP> {
                       ),
                     ),
                     onTap: () {
-                      // if (category[index].isActive == false) {
-                      //   setState(() {
-                      //     category[index].isActive = true;
-                      //   });
-                      // }
-                      // else {
-                      //   setState(() {
-                      //     category[index].isActive = false;
-                      //   });
-                      // }
-                      // log(category[index].isActive.toString());
                     },
                   );
                 }
@@ -380,25 +346,39 @@ class _MyTMPState extends State<MyTMP> {
             const SizedBox(
               height: 10,
             ),
-            SizedBox(
-              height: 210,
-              child: Stack(
-                children: <Widget>[
-                  CarouselSlider.builder(
-                    itemCount: hotSales.length,
-                    itemBuilder: ((context, index, realIndex) {
-                      final urlImage = hotSales[index].picture;
-                      return buildImage(urlImage, index);
-                    }),
-                    options: CarouselOptions(
-                      enlargeCenterPage: true,
-                      aspectRatio: 2.0,
-                      viewportFraction: 0.9,
-                      height: 200,
+            FutureBuilder(
+              future: fetchHotSales(),
+              builder: (context, AsyncSnapshot snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (hotSales.isEmpty) {
+                  hotSales.addAll(snapshot.data);
+                }
+                if (snapshot.hasData) {
+                  return SizedBox(
+                    height: 210,
+                    child: Stack(
+                      children: <Widget>[
+                        CarouselSlider.builder(
+                          itemCount: hotSales.length,
+                          itemBuilder: ((context, index, realIndex) {
+                            final urlImage = hotSales[index].picture;
+                            return buildImage(urlImage, index);
+                          }),
+                          options: CarouselOptions(
+                            enlargeCenterPage: true,
+                            aspectRatio: 2.0,
+                            viewportFraction: 0.9,
+                            height: 200,
+                          )
+                        ),
+                      ]
                     )
-                  ),
-                ]
-              )
+                  );
+                }
+                return const Center(child: Text("no info"));
+              },
             ),
             Row(
               children: const [
@@ -434,8 +414,13 @@ class _MyTMPState extends State<MyTMP> {
             FutureBuilder(
               future: fetchBestSales(),
               builder: (context, AsyncSnapshot snapshot) {
-                
-                if (bestSales.isNotEmpty) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+                if (bestSales.isEmpty) {
+                  bestSales.addAll(snapshot.data);
+                }
+                if (snapshot.hasData) {
                   return GestureDetector(
                     child: SizedBox(
                       child: GridView.builder(
@@ -588,68 +573,10 @@ class _MyTMPState extends State<MyTMP> {
                 }
                 return const Center(child: Text("no info"));
               },
-              
             )
           ]
         ),
-        bottomNavigationBar: Container(
-        decoration: const BoxDecoration(
-          borderRadius: BorderRadius.only(
-            topRight: Radius.circular(15),
-            topLeft: Radius.circular(15), 
-          ),
-          color: AppColors.secondaryColor,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-          child: GNav(
-            backgroundColor: AppColors.secondaryColor,
-            color: AppColors.fillColor,
-            activeColor: AppColors.fillColor,
-            tabBackgroundColor: AppColors.secondaryColor,
-            gap: 8,
-            iconSize: 24,
-            duration: const Duration(milliseconds: 900),
-            padding: const EdgeInsets.all(15),
-            tabs: const [
-              GButton(
-                icon: Icons.brightness_1,
-                iconSize: 15,
-                text: 'Explorer',
-              ),
-              GButton(
-                icon: Icons.shopping_bag_outlined,
-                text: 'Cart',
-                active: false,
-              ),
-              GButton(
-                icon: Icons.favorite_outline,
-                text: 'Favorites',
-              ),
-              GButton(
-                icon: Icons.person,
-                text: 'Account',
-              ),
-            ],
-            selectedIndex: 0,
-            onTabChange: (index) {
-              if (index == 1) {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const MyCart()),
-                );
-              }
-            },
-          ),
-        ),
       ),
-      ),
-            );
-          }
-      return const Center(child: Text("no info"));
-        },
-      );
-
-    
+    );
   }
 }

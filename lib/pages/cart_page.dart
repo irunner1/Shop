@@ -162,7 +162,6 @@ List<Cart> cartData = [];
                                           maxLines: 2,
                                           softWrap: false
                                         ),
-                                        // const Spacer(),
                                         Text(
                                           '\$${cartData[0].products[index].price}.00',
                                           style: const TextStyle(
