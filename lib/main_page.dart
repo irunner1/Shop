@@ -1,5 +1,6 @@
 import 'package:app/pages/cart_page.dart';
 import 'package:app/pages/home_page.dart';
+import 'package:app/pages/tmp_page.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import '../helpers/colors.dart';
@@ -21,7 +22,8 @@ class _MyWidgetState extends State<MyMain> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: pages[navIndex],
+      // body: pages[navIndex],
+      body: MyTMP(),
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           borderRadius: BorderRadius.only(

@@ -1,4 +1,5 @@
 import 'package:app/main_page.dart';
+import 'package:app/pages/tmp_page.dart';
 import 'package:flutter/material.dart';
 import 'theme/custom_theme.dart';
 
@@ -15,7 +16,7 @@ class MyApp extends StatelessWidget {
       title: 'ECOMMERCE',
       debugShowCheckedModeBanner: false,
       theme: CustomTheme.lightTheme,
-      home: const MyMain(),
+      home: const MyTMP(),
     );
   }
 }
