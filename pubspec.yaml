@@ -41,6 +41,8 @@ dependencies:
   tab_indicator_styler: ^2.0.0
   flutter_rating_bar: ^4.0.1
   cached_network_image: ^3.2.1
+  dropdown_button2: ^1.7.2
+
 
 dev_dependencies:
   flutter_test:
@@ -66,11 +68,6 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  assets:
-    - lib/assets/one.png
-    - lib/assets/two.png
-    - lib/assets/three.png
-    - lib/assets/four.png
 
 
   # An image asset can refer to one or more resolution-specific "variants", see

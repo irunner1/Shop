@@ -11,4 +11,5 @@ class AppColors{
   static const Color itembackColor = Color(0xffF8F8F8);
   static const Color cartColor = Color(0xff282843);
   static const Color dividerColor = Color(0xff414068);
+  static const Color filterColor = Color(0xffDCDCDC);
 }

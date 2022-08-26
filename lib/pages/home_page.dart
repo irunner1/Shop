@@ -12,6 +12,7 @@ import 'dart:convert';
 import 'package:app/pages/splash_screen.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:app/pages/cart_page.dart';
+import 'package:dropdown_button2/dropdown_button2.dart';
 
 
 class MyHomePage extends StatefulWidget {
@@ -24,6 +25,21 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late FocusNode node;
   late int selectedIndex;
+  final List<String> filterItems = [
+    'Samsung',
+    'Xiaomi',
+    'Motorolla',
+    'Iphone'
+  ];
+  final List<String> filterPrice = [
+    '100\$',
+    '200\$',
+    '300\$'
+  ];
+  final List<String> filterSize = [];
+
+  
+
   List<HomeStore> hotSales = [];
   List<BestSeller> bestSales = [];
 
@@ -59,16 +75,7 @@ class _MyHomePageState extends State<MyHomePage> {
   void initState() {
     super.initState();
     node = FocusNode();
-    selectedIndex = 0;
-    // fetchBestSales().then((value) {
-    //   bestSales.clear();
-    //   bestSales.addAll(value);
-    // });
-    // fetchHotSales().then((value) {
-    //   hotSales.clear();
-    //   hotSales.addAll(value);
-    // });
-    
+    selectedIndex = 0;    
   }
 
   @override
@@ -161,8 +168,7 @@ class _MyHomePageState extends State<MyHomePage> {
     );
 
     Widget customRadioButton(int index) {
-      return 
-      GestureDetector(
+      return GestureDetector(
         onTap: (() {
           setState(() {
             selectedIndex = index;
@@ -202,8 +208,79 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
 
+    Widget customDropDown(List<String> items, String? selectedValue) {
+      return DropdownButtonHideUnderline(
+        child: DropdownButton2(
+          isExpanded: true,
+          hint: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  selectedValue!,
+                  style: const TextStyle(
+                    fontSize: 18,
+                    // fontWeight: FontWeight.bold,
+                    color: AppColors.secondaryColor,
+                  ),
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ],
+          ),
+          items: items.map((item) => DropdownMenuItem<String>(
+            value: item,
+            child: Text(
+              item,
+              style: const TextStyle(
+                fontSize: 14,
+                color: AppColors.secondaryColor,
+              ),
+              overflow: TextOverflow.ellipsis,
+            ),
+          )).toList(),
+          value: selectedValue,
+          onChanged: (value) {
+            setState(() {
+              selectedValue = value as String;
+            });
+          },
+          icon: const Icon(
+            Icons.keyboard_arrow_down
+          ),
+          iconOnClick: const Icon(
+            Icons.keyboard_arrow_up
+          ),
+          iconSize: 30,
+          iconEnabledColor: AppColors.filterColor,
+          iconDisabledColor: AppColors.filterColor,
+          buttonHeight: 35,
+          buttonWidth: 300,
+          buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+          buttonDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            border: Border.all(
+              color: AppColors.filterColor,
+            ),
+            color: AppColors.fillColor,
+          ),
+          itemHeight: 40,
+          itemPadding: const EdgeInsets.only(left: 14, right: 14),
+          dropdownMaxHeight: 200,
+          dropdownWidth: 300,
+          dropdownPadding: null,
+          dropdownDecoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(14),
+            color: AppColors.fillColor,
+          ),
+          dropdownElevation: 8,
+          scrollbarRadius: const Radius.circular(40),
+          scrollbarThickness: 6,
+          scrollbarAlwaysShow: true,
+        ),
+      );
+    }
+    
     return FutureBuilder<List<dynamic>>(
-      
       future: Future.wait([
         fetchBestSales(),
         fetchHotSales(),
@@ -252,11 +329,122 @@ class _MyHomePageState extends State<MyHomePage> {
                       const Spacer(),
                       IconButton(
                         icon: const Icon(Icons.filter_alt_outlined, color: AppColors.secondaryColor),
-                          iconSize: 25,
-                          splashRadius: 25,
-                          onPressed: (){
-                            log('filter');
-                          },
+                        iconSize: 25,
+                        splashRadius: 25,
+                        onPressed: (){
+                          showModalBottomSheet<void>(
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10.0),
+                            ),
+                            context: context,
+                            builder: (BuildContext context) {
+                              return Container(
+                                height: 300,
+                                padding: const EdgeInsets.only(top: 20),
+                                child: Column(
+                                  mainAxisAlignment: MainAxisAlignment.start,
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: <Widget>[
+                                    Row(
+                                      children: [
+                                        const Spacer(flex: 3,),
+                                        InkWell(
+                                          child: Container(
+                                            height: 35,
+                                            width: 35,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.rectangle,
+                                              color: AppColors.secondaryColor,
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            child: const Icon(Icons.close, color: AppColors.fillColor),
+                                          ),
+                                          onTap: () {
+                                            Navigator.pop(context);
+                                          },
+                                        ),
+                                        const Spacer(flex: 2),
+                                        const Text(
+                                          'Filter options',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            fontWeight: FontWeight.bold,
+                                            color: AppColors.secondaryColor
+                                          ),
+                                          overflow: TextOverflow.fade,
+                                          maxLines: 1,
+                                          softWrap: false,
+                                        ),
+                                        const Spacer(flex: 2),
+                                        InkWell(
+                                          child: Container(
+                                            height: 35,
+                                            width: 80,
+                                            decoration: BoxDecoration(
+                                              shape: BoxShape.rectangle,
+                                              color: AppColors.contrastColor,
+                                              borderRadius: BorderRadius.circular(10),
+                                            ),
+                                            child: const Center(
+                                              child: Text(
+                                                'Done',
+                                                style: TextStyle(
+                                                  color: AppColors.fillColor,
+                                                  fontSize: 18,
+                                                ),
+                                              ),
+                                            )
+                                          ),
+                                          onTap: () {},
+                                        ),
+                                        const Spacer(flex: 3,),
+                                      ],
+                                    ),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      padding: const EdgeInsets.only(left: 50, top: 10, bottom: 5),
+                                      child: const Text(
+                                        'Brand',
+                                        style: TextStyle(
+                                          color: AppColors.secondaryColor,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    customDropDown(filterItems, 'Samsung'),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      padding: const EdgeInsets.only(left: 50, top: 10, bottom: 5),
+                                      child: const Text(
+                                        'Price',
+                                        style: TextStyle(
+                                          color: AppColors.secondaryColor,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    // customDropDown(filterPrice, '0'),
+                                    Container(
+                                      width: MediaQuery.of(context).size.width,
+                                      padding: const EdgeInsets.only(left: 50, top: 10, bottom: 5),
+                                      child: const Text(
+                                        'Size',
+                                        style: TextStyle(
+                                          color: AppColors.secondaryColor,
+                                          fontSize: 18,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                      ),
+                                    ),
+                                    // customDropDown(filterPrice, '1')
+                                  ],
+                                ),
+                              );
+                            }
+                          );
+                        },
                       )
                     ],
                   ),
@@ -477,33 +665,46 @@ class _MyHomePageState extends State<MyHomePage> {
                                                 width: 150,
                                                 fit: BoxFit.fitHeight,
                                             ),
-                                            CircleAvatar(
-                                              radius: 15,
-                                              backgroundColor: AppColors.fillColor,
-                                              child: IconButton(
-                                                iconSize: 15,
-                                                splashRadius: 15,
-                                                icon: (bestSales[index].isFavorites == true)
-                                                ? const Icon(
-                                                    Icons.favorite_outlined,
-                                                    color: AppColors.contrastColor,
-                                                  )
-                                                : const Icon(
-                                                    Icons.favorite_outline,
-                                                    color: AppColors.contrastColor,
+                                            Container(
+                                              margin: const EdgeInsets.only(top: 5),
+                                              decoration: const BoxDecoration(
+                                                shape: BoxShape.circle,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                    color: AppColors.priceColor,
+                                                    spreadRadius: 1,
+                                                    blurRadius: 10,
                                                   ),
-                                                onPressed: () {
-                                                  if (bestSales[index].isFavorites == false) {
-                                                    setState(() {
-                                                      bestSales[index].isFavorites = true;
-                                                    });
-                                                  } else {
-                                                    setState(() {
-                                                      bestSales[index].isFavorites = false;
-                                                    });
-                                                  }
-                                                  log(bestSales[index].isFavorites.toString());
-                                                },
+                                                ],
+                                              ),
+                                              child: CircleAvatar(
+                                                radius: 15,
+                                                backgroundColor: AppColors.fillColor,
+                                                child: IconButton(
+                                                  iconSize: 15,
+                                                  splashRadius: 15,
+                                                  icon: (bestSales[index].isFavorites == true)
+                                                  ? const Icon(
+                                                      Icons.favorite_outlined,
+                                                      color: AppColors.contrastColor,
+                                                    )
+                                                  : const Icon(
+                                                      Icons.favorite_outline,
+                                                      color: AppColors.contrastColor,
+                                                    ),
+                                                  onPressed: () {
+                                                    if (bestSales[index].isFavorites == false) {
+                                                      setState(() {
+                                                        bestSales[index].isFavorites = true;
+                                                      });
+                                                    } else {
+                                                      setState(() {
+                                                        bestSales[index].isFavorites = false;
+                                                      });
+                                                    }
+                                                    log(bestSales[index].isFavorites.toString());
+                                                  },
+                                                ),
                                               ),
                                             ),
                                           ]
