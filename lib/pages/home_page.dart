@@ -25,6 +25,11 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   late FocusNode node;
   late int selectedIndex;
+
+  String? selectedBrandValue;
+  String? selectedPriceValue;
+  String? selectedSizeValue;
+
   final List<String> filterItems = [
     'Samsung',
     'Xiaomi',
@@ -32,13 +37,16 @@ class _MyHomePageState extends State<MyHomePage> {
     'Iphone'
   ];
   final List<String> filterPrice = [
-    '100\$',
-    '200\$',
-    '300\$'
+    '300\$',
+    '500\$',
+    '1000\$',
+    '10000\$'
   ];
-  final List<String> filterSize = [];
-
-  
+  final List<String> filterSize = [
+    '4 inches',
+    '5 inches',
+    '6 inches',
+  ];
 
   List<HomeStore> hotSales = [];
   List<BestSeller> bestSales = [];
@@ -55,7 +63,6 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     return homeStore;
   }
-  
   Future fetchBestSales() async {
     var response = await http.get(Uri.https('run.mocky.io', '/v3/654bd15e-b121-49ba-a588-960956b15175'));
     List<BestSeller> bestSale = [];
@@ -69,8 +76,6 @@ class _MyHomePageState extends State<MyHomePage> {
     return bestSale;
   }
   
-
-
   @override
   void initState() {
     super.initState();
@@ -208,75 +213,79 @@ class _MyHomePageState extends State<MyHomePage> {
       );
     }
 
-    Widget customDropDown(List<String> items, String? selectedValue) {
-      return DropdownButtonHideUnderline(
-        child: DropdownButton2(
-          isExpanded: true,
-          hint: Row(
-            children: [
-              Expanded(
-                child: Text(
-                  selectedValue!,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    // fontWeight: FontWeight.bold,
-                    color: AppColors.secondaryColor,
+    Widget customDropDown(List<String> items, String? selval, String title) {
+      return StatefulBuilder(
+        builder: (BuildContext context, StateSetter setState) {
+        return DropdownButtonHideUnderline(
+          child: DropdownButton2(
+            isExpanded: true,
+            hint: Row(
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      // fontWeight: FontWeight.bold,
+                      color: AppColors.secondaryColor,
+                    ),
+                    overflow: TextOverflow.ellipsis,
                   ),
-                  overflow: TextOverflow.ellipsis,
                 ),
-              ),
-            ],
-          ),
-          items: items.map((item) => DropdownMenuItem<String>(
-            value: item,
-            child: Text(
-              item,
-              style: const TextStyle(
-                fontSize: 14,
-                color: AppColors.secondaryColor,
-              ),
-              overflow: TextOverflow.ellipsis,
+              ],
             ),
-          )).toList(),
-          value: selectedValue,
-          onChanged: (value) {
-            setState(() {
-              selectedValue = value as String;
-            });
-          },
-          icon: const Icon(
-            Icons.keyboard_arrow_down
-          ),
-          iconOnClick: const Icon(
-            Icons.keyboard_arrow_up
-          ),
-          iconSize: 30,
-          iconEnabledColor: AppColors.filterColor,
-          iconDisabledColor: AppColors.filterColor,
-          buttonHeight: 35,
-          buttonWidth: 300,
-          buttonPadding: const EdgeInsets.only(left: 14, right: 14),
-          buttonDecoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(5),
-            border: Border.all(
-              color: AppColors.filterColor,
+            items: items.map((item) => DropdownMenuItem<String>(
+              value: item,
+              child: Text(
+                item,
+                style: const TextStyle(
+                  fontSize: 14,
+                  color: AppColors.secondaryColor,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            )).toList(),
+            value: selval,
+            onChanged: (value) {
+              setState(() {
+                selval = value as String;
+              });
+            },
+            icon: const Icon(
+              Icons.keyboard_arrow_down
             ),
-            color: AppColors.fillColor,
+            iconOnClick: const Icon(
+              Icons.keyboard_arrow_up
+            ),
+            iconSize: 30,
+            iconEnabledColor: AppColors.filterColor,
+            iconDisabledColor: AppColors.filterColor,
+            buttonHeight: 35,
+            buttonWidth: 300,
+            buttonPadding: const EdgeInsets.only(left: 14, right: 14),
+            buttonDecoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(5),
+              border: Border.all(
+                color: AppColors.filterColor,
+              ),
+              color: AppColors.fillColor,
+            ),
+            itemHeight: 40,
+            itemPadding: const EdgeInsets.only(left: 14, right: 14),
+            dropdownMaxHeight: 200,
+            dropdownWidth: 300,
+            dropdownPadding: null,
+            dropdownDecoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(14),
+              color: AppColors.fillColor,
+            ),
+            dropdownElevation: 8,
+            scrollbarRadius: const Radius.circular(40),
+            scrollbarThickness: 6,
+            scrollbarAlwaysShow: true,
           ),
-          itemHeight: 40,
-          itemPadding: const EdgeInsets.only(left: 14, right: 14),
-          dropdownMaxHeight: 200,
-          dropdownWidth: 300,
-          dropdownPadding: null,
-          dropdownDecoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(14),
-            color: AppColors.fillColor,
-          ),
-          dropdownElevation: 8,
-          scrollbarRadius: const Radius.circular(40),
-          scrollbarThickness: 6,
-          scrollbarAlwaysShow: true,
-        ),
+        );
+        }
       );
     }
     
@@ -412,7 +421,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         ),
                                       ),
                                     ),
-                                    customDropDown(filterItems, 'Samsung'),
+                                    customDropDown(filterItems, selectedBrandValue, 'Choose brand'),
                                     Container(
                                       width: MediaQuery.of(context).size.width,
                                       padding: const EdgeInsets.only(left: 50, top: 10, bottom: 5),
@@ -425,7 +434,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         ),
                                       ),
                                     ),
-                                    // customDropDown(filterPrice, '0'),
+                                    customDropDown(filterPrice, selectedPriceValue, 'Choose price'),
                                     Container(
                                       width: MediaQuery.of(context).size.width,
                                       padding: const EdgeInsets.only(left: 50, top: 10, bottom: 5),
@@ -438,7 +447,7 @@ class _MyHomePageState extends State<MyHomePage> {
                                         ),
                                       ),
                                     ),
-                                    // customDropDown(filterPrice, '1')
+                                    customDropDown(filterSize, selectedSizeValue, '4.5 to 5.5 inches')
                                   ],
                                 ),
                               );
@@ -774,56 +783,114 @@ class _MyHomePageState extends State<MyHomePage> {
                 ]
               ),
               bottomNavigationBar: Container(
-              decoration: const BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topRight: Radius.circular(15),
-                  topLeft: Radius.circular(15), 
+                height: 70,
+                decoration: const BoxDecoration(
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(15),
+                    topLeft: Radius.circular(15), 
+                  ),
+                  color: AppColors.secondaryColor,
                 ),
-                color: AppColors.secondaryColor,
-              ),
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 10),
-                child: GNav(
-                  backgroundColor: AppColors.secondaryColor,
-                  color: AppColors.fillColor,
-                  activeColor: AppColors.fillColor,
-                  tabBackgroundColor: AppColors.secondaryColor,
-                  gap: 8,
-                  iconSize: 24,
-                  duration: const Duration(milliseconds: 900),
-                  padding: const EdgeInsets.all(15),
-                  tabs: const [
-                    GButton(
-                      icon: Icons.brightness_1,
-                      iconSize: 15,
-                      text: 'Explorer',
-                    ),
-                    GButton(
-                      icon: Icons.shopping_bag_outlined,
-                      text: 'Cart',
-                      active: false,
-                    ),
-                    GButton(
-                      icon: Icons.favorite_outline,
-                      text: 'Favorites',
-                    ),
-                    GButton(
-                      icon: Icons.person,
-                      text: 'Account',
-                    ),
-                  ],
-                  selectedIndex: 0,
-                  onTabChange: (index) {
-                    if (index == 1) {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => const MyCart()),
-                      );
-                    }
-                  },
+                child: Padding(
+                  padding: const EdgeInsets.all(5),
+                  child: BottomNavigationBar(
+                    backgroundColor: AppColors.secondaryColor,
+                    iconSize: 24,
+                    items: [
+                      BottomNavigationBarItem(
+                        backgroundColor: AppColors.secondaryColor,
+                        label: '',
+                        icon: Stack(
+                          children:  <Widget>[
+                            Container(
+                              width: 60,
+                              margin: const EdgeInsets.only(top: 10),
+                              child: Row(children: const [
+                                Icon(Icons.brightness_1, size: 13,),
+                                Spacer(),
+                                Text('Home', style: TextStyle(color: AppColors.fillColor),)
+                              ],),
+                            ),
+                             
+                          ]
+                        )
+                      ),
+                      BottomNavigationBarItem(
+                        label: 'Home',
+                        icon: Stack(
+                          children: const  <Widget>[
+                            Icon(Icons.shopping_bag_outlined),
+                             Positioned(  // draw a red marble
+                              top: 0.0,
+                              right: 0.0,
+                              child: Icon(Icons.brightness_1,
+                                size: 8.0, 
+                                color: Colors.redAccent
+                              ),
+                            )
+                          ]
+                        ),
+                      ),
+                      const BottomNavigationBarItem(
+                        label: 'Home',
+                        icon: Icon(Icons.favorite_outline, size: 20,)
+                      ),
+                     const BottomNavigationBarItem(
+                        label: 'Home',
+                        icon: Icon(Icons.person, size: 20,)),
+                    ],
+                    onTap: ((value) {
+                      if (value == 1) {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const MyCart()),
+                        );
+                      }
+                    }),
+                  ),
+                  
+                  // GNav(
+                  //   backgroundColor: AppColors.secondaryColor,
+                  //   color: AppColors.fillColor,
+                  //   activeColor: AppColors.fillColor,
+                  //   tabBackgroundColor: AppColors.secondaryColor,
+                  //   gap: 8,
+                  //   iconSize: 24,
+                  //   duration: const Duration(milliseconds: 900),
+                  //   padding: const EdgeInsets.all(15),
+                  //   tabs: const [
+                  //     GButton(
+                  //       icon: Icons.brightness_1,
+                  //       iconSize: 15,
+                  //       text: 'Explorer',
+                  //     ),
+                  //     GButton(
+                  //       icon: Icons.shopping_bag_outlined,
+                  //       text: 'Cart',
+                  //       active: false,
+                  //     ),
+                  //     GButton(
+                  //       icon: Icons.favorite_outline,
+                  //       text: 'Favorites',
+                        
+                  //     ),
+                  //     GButton(
+                  //       icon: Icons.person,
+                  //       text: 'Account',
+                  //     ),
+                  //   ],
+                  //   selectedIndex: 0,
+                  //   onTabChange: (index) {
+                  //     if (index == 1) {
+                  //       Navigator.push(
+                  //         context,
+                  //         MaterialPageRoute(builder: (context) => const MyCart()),
+                  //       );
+                  //     }
+                  //   },
+                  // ),
                 ),
               ),
-            ),
             ),
           );
         }
