@@ -1,5 +1,4 @@
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:http/http.dart' as http;
@@ -8,6 +7,7 @@ import '../helpers/colors.dart';
 import '../helpers/data.dart';
 import 'dart:convert';
 import 'package:app/assets/MyIcons.dart';
+
 
 class MyItemPage extends StatefulWidget {
   const MyItemPage({Key? key}) : super(key: key);
