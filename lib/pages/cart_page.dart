@@ -127,7 +127,7 @@ class _MyCartState extends State<MyCart> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: 380,
+                        height: MediaQuery.of(context).size.height * 0.45,
                         child: ListView.builder(
                           padding: const EdgeInsets.only(top: 8, left: 0, right: 8, bottom: 8),
                           itemCount: 2,
@@ -147,7 +147,7 @@ class _MyCartState extends State<MyCart> {
                                   ),
                                   const Spacer(),
                                   Container(
-                                    width: 180,
+                                    width: MediaQuery.of(context).size.width * 0.4,
                                     padding: const EdgeInsets.all(10),
                                     child: Column(
                                       crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,7 +156,7 @@ class _MyCartState extends State<MyCart> {
                                           cartData[0].products[index].title,
                                           style: const TextStyle(
                                             color: AppColors.fillColor,  
-                                            fontSize: 20,
+                                            fontSize: 18,
                                           ),
                                           overflow: TextOverflow.ellipsis,
                                           maxLines: 2,
@@ -284,7 +284,6 @@ class _MyCartState extends State<MyCart> {
                         color: AppColors.dividerColor,  
                       ),
                       const SizedBox(height: 10,),
-
                       Container(
                         width: MediaQuery.of(context).size.width - 50,
                         clipBehavior: Clip.hardEdge,
@@ -308,8 +307,7 @@ class _MyCartState extends State<MyCart> {
                           ),
                         ),
                       ),
-                      const SizedBox(height: 50,)
-
+                      const SizedBox(height: 100)
                     ],
                   )
                 );

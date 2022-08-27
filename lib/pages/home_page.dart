@@ -683,9 +683,9 @@ class _MyHomePageState extends State<MyHomePage> {
                                             // ),
                                             CachedNetworkImage(
                                               imageUrl: bestSales[index].picture,
-                                              height: 150,
-                                                width: 150,
-                                                fit: BoxFit.fitHeight,
+                                              height: MediaQuery.of(context).size.height * 0.18,
+                                              width: 150,
+                                              fit: BoxFit.fitHeight,
                                             ),
                                             Container(
                                               margin: const EdgeInsets.only(top: 5),

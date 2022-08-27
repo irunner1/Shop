@@ -164,7 +164,7 @@ class _MyItemPageState extends State<MyItemPage> {
                   height: 20,
                 ),
                 SizedBox(
-                  height: 290,
+                  height: 250,
                   child: Stack(
                     children: <Widget>[
                       CarouselSlider.builder(
@@ -178,13 +178,14 @@ class _MyItemPageState extends State<MyItemPage> {
                           // aspectRatio: 2.0,
                           // autoPlay: true,
                           viewportFraction: 0.7,
-                          height: 500
+                          height: 300
                         )
                       )
                     ]
                   )
                 ),
                 Container(
+                  height: MediaQuery.of(context).size.height,
                   padding: const EdgeInsets.only(top: 15),
                   margin: const EdgeInsets.only(top: 15),
                   decoration: const BoxDecoration(
