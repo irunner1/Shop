@@ -15,7 +15,7 @@ class MyCart extends StatefulWidget {
 }
 
 class _MyCartState extends State<MyCart> {
-List<Cart> cartData = [];
+  List<Cart> cartData = [];
   
   Future fetchCartData() async {
     var response = await http.get(Uri.https('run.mocky.io', '/v3/53539a72-3c5f-4f30-bbb1-6ca10d42c149'));

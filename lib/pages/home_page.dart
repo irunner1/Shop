@@ -10,7 +10,6 @@ import '../helpers/item.dart';
 import '../helpers/data.dart';
 import 'dart:convert';
 import 'package:app/pages/splash_screen.dart';
-import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:app/pages/cart_page.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
@@ -50,6 +49,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   List<HomeStore> hotSales = [];
   List<BestSeller> bestSales = [];
+  List<Cart> cartData = [];
 
   Future fetchHotSales() async {
     var response = await http.get(Uri.https('run.mocky.io', '/v3/654bd15e-b121-49ba-a588-960956b15175'));
@@ -75,7 +75,17 @@ class _MyHomePageState extends State<MyHomePage> {
     }
     return bestSale;
   }
-  
+  Future fetchCartData() async {
+    var response = await http.get(Uri.https('run.mocky.io', '/v3/53539a72-3c5f-4f30-bbb1-6ca10d42c149'));
+    List<Cart> products = [];
+    if (response.statusCode == 200) {
+      var notes = json.decode(response.body);
+      products.add(Cart.fromJson(notes));
+      log(products.length.toString());
+    }
+    return products;
+  }
+
   @override
   void initState() {
     super.initState();
@@ -97,7 +107,6 @@ class _MyHomePageState extends State<MyHomePage> {
       // child: Image(image: NetworkImage(urlImage),fit: BoxFit.cover)
       child: Stack(
         alignment: Alignment.topLeft,
-        
         children: <Widget>[
           Container(
             alignment: Alignment.center,
@@ -293,6 +302,7 @@ class _MyHomePageState extends State<MyHomePage> {
       future: Future.wait([
         fetchBestSales(),
         fetchHotSales(),
+        fetchCartData(),
       ]),
       builder: (context, AsyncSnapshot snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
@@ -304,6 +314,9 @@ class _MyHomePageState extends State<MyHomePage> {
         }
         if (hotSales.isEmpty) {
           hotSales.addAll(snapshot.data[1]);
+        }
+        if (cartData.isEmpty) {
+          cartData.addAll(snapshot.data[2]);
         }
         if (bestSales.isNotEmpty) {
           return GestureDetector(
@@ -778,7 +791,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       }
                       return const Center(child: Text("no info"));
                     },
-                    
                   )
                 ]
               ),
@@ -803,12 +815,12 @@ class _MyHomePageState extends State<MyHomePage> {
                         icon: Stack(
                           children:  <Widget>[
                             Container(
-                              width: 60,
+                              width: 75,
                               margin: const EdgeInsets.only(top: 10),
                               child: Row(children: const [
-                                Icon(Icons.brightness_1, size: 13,),
+                                Icon(Icons.brightness_1, size: 11,),
                                 Spacer(),
-                                Text('Home', style: TextStyle(color: AppColors.fillColor),)
+                                Text('Explorer', style: TextStyle(color: AppColors.fillColor, fontWeight: FontWeight.bold),)
                               ],),
                             ),
                              
@@ -816,28 +828,53 @@ class _MyHomePageState extends State<MyHomePage> {
                         )
                       ),
                       BottomNavigationBarItem(
-                        label: 'Home',
+                        label: 'Cart',
                         icon: Stack(
-                          children: const  <Widget>[
-                            Icon(Icons.shopping_bag_outlined),
-                             Positioned(  // draw a red marble
-                              top: 0.0,
-                              right: 0.0,
-                              child: Icon(Icons.brightness_1,
-                                size: 8.0, 
-                                color: Colors.redAccent
-                              ),
-                            )
+                          children: <Widget>[
+                            const SizedBox(
+                              width: 50,
+                              height: 25,
+                              // color: Colors.red,
+                              child: Icon(Icons.shopping_bag_outlined, size: 25,)),
+                            (cartData.isNotEmpty == true)
+                              ? Positioned(  // draw a red marble
+                                top: 0.0,
+                                right: 5.0,
+                                child: Container(
+                                  height: 15,
+                                  width: 15,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    color: AppColors.contrastColor,
+
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      cartData[0].products.length.toString(),
+                                      style: const TextStyle(
+                                        color: AppColors.fillColor,
+                                        fontSize: 13,
+                                      ),
+                                    )
+                                  )
+                                )
+                                // Icon(Icons.brightness_1,
+                                //   size: 8.0, 
+                                //   color: Colors.redAccent
+                                // ),
+                              )
+                              : const Text('')
                           ]
                         ),
                       ),
                       const BottomNavigationBarItem(
-                        label: 'Home',
-                        icon: Icon(Icons.favorite_outline, size: 20,)
+                        label: 'Favorites',
+                        icon: Icon(Icons.favorite_outline, size: 25,)
                       ),
-                     const BottomNavigationBarItem(
-                        label: 'Home',
-                        icon: Icon(Icons.person, size: 20,)),
+                      const BottomNavigationBarItem(
+                        label: 'Account',
+                        icon: Icon(Icons.person, size: 25,)
+                      ),
                     ],
                     onTap: ((value) {
                       if (value == 1) {
@@ -848,47 +885,6 @@ class _MyHomePageState extends State<MyHomePage> {
                       }
                     }),
                   ),
-                  
-                  // GNav(
-                  //   backgroundColor: AppColors.secondaryColor,
-                  //   color: AppColors.fillColor,
-                  //   activeColor: AppColors.fillColor,
-                  //   tabBackgroundColor: AppColors.secondaryColor,
-                  //   gap: 8,
-                  //   iconSize: 24,
-                  //   duration: const Duration(milliseconds: 900),
-                  //   padding: const EdgeInsets.all(15),
-                  //   tabs: const [
-                  //     GButton(
-                  //       icon: Icons.brightness_1,
-                  //       iconSize: 15,
-                  //       text: 'Explorer',
-                  //     ),
-                  //     GButton(
-                  //       icon: Icons.shopping_bag_outlined,
-                  //       text: 'Cart',
-                  //       active: false,
-                  //     ),
-                  //     GButton(
-                  //       icon: Icons.favorite_outline,
-                  //       text: 'Favorites',
-                        
-                  //     ),
-                  //     GButton(
-                  //       icon: Icons.person,
-                  //       text: 'Account',
-                  //     ),
-                  //   ],
-                  //   selectedIndex: 0,
-                  //   onTabChange: (index) {
-                  //     if (index == 1) {
-                  //       Navigator.push(
-                  //         context,
-                  //         MaterialPageRoute(builder: (context) => const MyCart()),
-                  //       );
-                  //     }
-                  //   },
-                  // ),
                 ),
               ),
             ),
