@@ -1,4 +1,5 @@
 import 'package:tab_indicator_styler/tab_indicator_styler.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:http/http.dart' as http;
@@ -6,7 +7,7 @@ import 'package:flutter/material.dart';
 import '../helpers/colors.dart';
 import '../helpers/data.dart';
 import 'dart:convert';
-
+import 'package:app/assets/MyIcons.dart';
 
 class MyItemPage extends StatefulWidget {
   const MyItemPage({Key? key}) : super(key: key);
@@ -16,6 +17,9 @@ class MyItemPage extends StatefulWidget {
 }
 
 class _MyItemPageState extends State<MyItemPage> {
+  late int selectedIndex;
+  late int selectedTextIndex;
+
   List<ProductDetails> productDetails = [];
   
   Future fetchProductDetails() async {
@@ -26,6 +30,13 @@ class _MyItemPageState extends State<MyItemPage> {
       products.add(ProductDetails.fromJson(notes));
     }
     return products;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    selectedIndex = 0;  
+    selectedTextIndex = 0;  
   }
 
   @override
@@ -42,11 +53,53 @@ class _MyItemPageState extends State<MyItemPage> {
       ),
     );
 
+    Widget colorRadioButton(int index) {
+      return GestureDetector(
+        onTap: (() {
+          setState(() {
+            selectedIndex = index;
+          });
+        }),
+        child: CircleAvatar(
+          backgroundColor: hexToColor(productDetails[0].color[index]),
+          child: (selectedIndex == index) ? const Icon(Icons.check, color: AppColors.fillColor,) : const Text(''),
+        ),
+      );
+    }
+
+    Widget textRadioButton(int index, String text) {
+      return GestureDetector(
+        onTap: (() {
+          setState(() {
+            selectedTextIndex = index;
+          });
+        }),
+        child: Container(
+          width: 70,
+          height: 30,
+          padding: const EdgeInsets.all(5),
+          decoration: BoxDecoration(
+            color: (selectedTextIndex == index) ? AppColors.contrastColor : AppColors.fillColor,
+            borderRadius: BorderRadius.circular(10)
+          ),
+          child: Center(
+            child: Text(
+              '$text gb',
+              style: TextStyle(
+                color: (selectedTextIndex == index) ? AppColors.fillColor : AppColors.subColor,
+                fontWeight: FontWeight.bold,
+              ),
+              )
+            )
+        ),
+      );
+    }
+
     return Scaffold(
       body: FutureBuilder(
         future: fetchProductDetails(),
         builder: (context, AsyncSnapshot snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
+          if (snapshot.connectionState == ConnectionState.waiting && !snapshot.hasData) {
             return const Center(child: CircularProgressIndicator());
           }
           if (productDetails.isEmpty) {
@@ -292,7 +345,7 @@ class _MyItemPageState extends State<MyItemPage> {
                                           child: Column(
                                             children: <Widget>[
                                               const Icon(
-                                                Icons.sd_card,
+                                                MyIcons.memory,
                                                 color: AppColors.iconColor,
                                                 size: 30,
                                               ),
@@ -347,14 +400,14 @@ class _MyItemPageState extends State<MyItemPage> {
                       const SizedBox(height: 10,),
                       Row(
                         children: [
-                          const Spacer(flex: 2,),
-                          CircleAvatar(backgroundColor: hexToColor(productDetails[0].color[0])),
-                          const Spacer(),
-                          CircleAvatar(backgroundColor: hexToColor(productDetails[0].color[1])),
                           const Spacer(flex: 2),
-                          Text('${productDetails[0].capacity[0]} gb'),
+                          colorRadioButton(0),
                           const Spacer(),
-                          Text('${productDetails[0].capacity[1]} gb'),
+                          colorRadioButton(1),
+                          const Spacer(flex: 2),
+                          textRadioButton(0, productDetails[0].capacity[0]),
+                          const Spacer(),
+                          textRadioButton(1, productDetails[0].capacity[1]),
                           const Spacer(flex: 2),
                         ],
                       ),

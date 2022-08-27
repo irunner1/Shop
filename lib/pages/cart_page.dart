@@ -283,14 +283,19 @@ class _MyCartState extends State<MyCart> {
                         endIndent: 2,
                         color: AppColors.dividerColor,  
                       ),
+                      const SizedBox(height: 10,),
+
                       Container(
-                        height: 80,
-                        width: 500,
-                        padding: const EdgeInsets.only(left: 50, right: 50, top: 10, bottom: 20),
+                        width: MediaQuery.of(context).size.width - 50,
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(15.0),
+                          color: AppColors.contrastColor
+                        ),
                         child: TextButton(
                           style: TextButton.styleFrom(                    
                             backgroundColor: AppColors.contrastColor,
-                            padding: const EdgeInsets.only(left: 50, right: 50, top: 10, bottom: 10),
+                            padding: const EdgeInsets.all(10),
                           ),
                           onPressed: null,
                           child: const Text(
@@ -303,6 +308,8 @@ class _MyCartState extends State<MyCart> {
                           ),
                         ),
                       ),
+                      const SizedBox(height: 50,)
+
                     ],
                   )
                 );
