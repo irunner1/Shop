@@ -20,7 +20,7 @@
     <img src="https://sun9-17.userapi.com/impg/DGI40fug47N7MeohPyh3n23xxAHKfPIM6JRtxg/9myYm-c8Ans.jpg?size=1051x2160&quality=96&sign=ae62a904c19488952d3fc71cfe815035&type=album" alt="drawing" width="200"/>
 </p>
 <p align="center">
-    <img src="https://sun9-1.userapi.com/impg/jWLpTq_xQ0RUxAWOIF0QcSjo46kISYTpDunwRw/jZMJs0y8kmA.jpg?size=1051x2160&quality=96&sign=dc508d11dffa07a046e9e983b1da7c0a&type=album" alt="drawing" width="200"/>
+    <img src="https://sun9-57.userapi.com/impg/30pqNbAr96ZwIDPnmey97qXBmqayZ6LAs42CnQ/feQnUr_CIB4.jpg?size=1051x2160&quality=96&sign=b4295908e0873cc66dc0079ce43594d1&type=album" alt="drawing" width="200"/>
     <img src="https://sun9-58.userapi.com/impg/gXO2n6WUas5K9OGUkCz7Q7721hiN48eEZxB3PQ/IoNmhYC8-1o.jpg?size=1051x2160&quality=96&sign=07412c2e4cb8844e5d6e0bf7405a66d8&type=album" alt="drawing" width="200"/>
 </p>
 
