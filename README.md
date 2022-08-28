@@ -24,4 +24,4 @@
     <img src="https://sun9-58.userapi.com/impg/gXO2n6WUas5K9OGUkCz7Q7721hiN48eEZxB3PQ/IoNmhYC8-1o.jpg?size=1051x2160&quality=96&sign=07412c2e4cb8844e5d6e0bf7405a66d8&type=album" alt="drawing" width="200"/>
 </p>
 
-## <a href="https://github.com/irunner1/Shop/blob/main/temp/app-debug.apk" download="">.APK</a> ##
+## <a href="https://drive.google.com/file/d/1cTtTZSpeSsxnIjrzqLmha90JRI-EhVNX/view?usp=sharing" download="">.apk</a> ##
