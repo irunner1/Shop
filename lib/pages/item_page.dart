@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import '../helpers/colors.dart';
 import '../helpers/data.dart';
 import 'dart:convert';
-import 'package:app/assets/MyIcons.dart';
+import 'package:app/assets/my_icons.dart';
 import 'package:app/pages/cart_page.dart';
 
 

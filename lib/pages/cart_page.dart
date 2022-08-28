@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import '../helpers/colors.dart';
 import '../helpers/data.dart';
@@ -23,7 +21,6 @@ class _MyCartState extends State<MyCart> {
     if (response.statusCode == 200) {
       var notes = json.decode(response.body);
       products.add(Cart.fromJson(notes));
-      log(products.length.toString());
     }
     return products;
   }
