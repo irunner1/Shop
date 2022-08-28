@@ -200,17 +200,18 @@ class _MyCartState extends State<MyCart> {
                                       ]
                                     ),
                                   ),
-                                  // Container(
-                                  //   padding: const EdgeInsets.only(left: 10),
-                                  //   child: const Icon(Icons.delete, color: AppColors.fillColor)
-                                  // ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete, color: AppColors.fillColor),
-                                    onPressed: () {
-                                      setState(() {
-                                        cartData[0].products.removeAt(index);
-                                      });
-                                    },
+                                  Container(
+                                    width: MediaQuery.of(context).size.width * 0.1,
+                                    padding: const EdgeInsets.only(left: 10),
+                                    child: IconButton(
+                                      padding: const EdgeInsets.only(right: 5),
+                                      icon: const Icon(Icons.delete, color: AppColors.fillColor),
+                                      onPressed: () {
+                                        setState(() {
+                                          cartData[0].products.removeAt(index);
+                                        });
+                                      },
+                                    ),
                                   )
                                 ],
                               ),

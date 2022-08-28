@@ -350,7 +350,7 @@ class _MyItemPageState extends State<MyItemPage> {
                                           )
                                         ),
                                         Container(
-                                          width: 75,
+                                          width: 70,
                                           margin: const EdgeInsets.only(left: 20),
                                           child: Column(
                                             children: <Widget>[
@@ -368,7 +368,7 @@ class _MyItemPageState extends State<MyItemPage> {
                                           )
                                         ),
                                         Container(
-                                          width: 75,
+                                          width: 70,
                                           margin: const EdgeInsets.only(left: 20),
                                           child: Column(
                                             children: <Widget>[
@@ -386,7 +386,7 @@ class _MyItemPageState extends State<MyItemPage> {
                                           )
                                         ),
                                         Container(
-                                          width: 75,
+                                          width: 70,
                                           margin: const EdgeInsets.only(left: 20),
                                           child: Column(
                                             children: <Widget>[
