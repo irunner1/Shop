@@ -130,7 +130,7 @@ class _MyCartState extends State<MyCart> {
                         height: MediaQuery.of(context).size.height * 0.45,
                         child: ListView.builder(
                           padding: const EdgeInsets.only(top: 8, left: 0, right: 8, bottom: 8),
-                          itemCount: 2,
+                          itemCount: cartData[0].products.length,
                           itemBuilder: (BuildContext context, int index) {
                             return Container(
                               padding: const EdgeInsets.only(bottom: 45, left: 20, right: 10),
@@ -200,10 +200,18 @@ class _MyCartState extends State<MyCart> {
                                       ]
                                     ),
                                   ),
-                                  Container(
-                                    padding: const EdgeInsets.only(left: 10),
-                                    child: const Icon(Icons.delete, color: AppColors.fillColor)
-                                  ),
+                                  // Container(
+                                  //   padding: const EdgeInsets.only(left: 10),
+                                  //   child: const Icon(Icons.delete, color: AppColors.fillColor)
+                                  // ),
+                                  IconButton(
+                                    icon: const Icon(Icons.delete, color: AppColors.fillColor),
+                                    onPressed: () {
+                                      setState(() {
+                                        cartData[0].products.removeAt(index);
+                                      });
+                                    },
+                                  )
                                 ],
                               ),
                             );

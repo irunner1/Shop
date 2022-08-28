@@ -7,6 +7,7 @@ import '../helpers/colors.dart';
 import '../helpers/data.dart';
 import 'dart:convert';
 import 'package:app/assets/MyIcons.dart';
+import 'package:app/pages/cart_page.dart';
 
 
 class MyItemPage extends StatefulWidget {
@@ -155,7 +156,12 @@ class _MyItemPageState extends State<MyItemPage> {
                         ),
                         child: const Icon(Icons.shopping_bag_outlined, color: AppColors.fillColor),
                       ),
-                      onTap: () {},
+                      onTap: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => const MyCart()),
+                        );
+                      },
                     ),
                     const Spacer(),
                   ],
@@ -225,9 +231,30 @@ class _MyItemPageState extends State<MyItemPage> {
                                 color: AppColors.secondaryColor,
                                 borderRadius: BorderRadius.circular(10),
                               ),
-                              child: const Icon(Icons.favorite_outline, color: AppColors.fillColor, size: 18,),
+                              child: (productDetails[0].isFavorites == true) ?
+                              const Icon(
+                                Icons.favorite,
+                                color: AppColors.fillColor,
+                                size: 18
+                              )
+                              : const Icon (
+                                Icons.favorite_outline,
+                                color: AppColors.fillColor,
+                                size: 18
+                              ),
                             ),
-                            onTap: () {},
+                            onTap: () {
+                              if (productDetails[0].isFavorites == false) {
+                                setState(() {
+                                  productDetails[0].isFavorites = true;
+                                });
+                              } 
+                              else {
+                                setState(() {
+                                  productDetails[0].isFavorites = false;
+                                });
+                              }
+                            },
                           ),
                           const Spacer(),
                         ],
@@ -300,12 +327,12 @@ class _MyItemPageState extends State<MyItemPage> {
                                 child: TabBarView(
                                   children: [
                                     ListView(
-                                      padding: const EdgeInsets.only(top: 10, left: 0, right: 8, bottom: 0),
+                                      padding: const EdgeInsets.only(top: 10, right: 8),
                                       scrollDirection: Axis.horizontal,
                                       physics: const NeverScrollableScrollPhysics(),
                                       children: [
                                         Container(
-                                          width: 75,
+                                          width: 70,
                                           margin: const EdgeInsets.only(left: 20),
                                           child: Column(
                                             children: <Widget>[

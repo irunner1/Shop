@@ -81,7 +81,6 @@ class _MyHomePageState extends State<MyHomePage> {
     if (response.statusCode == 200) {
       var notes = json.decode(response.body);
       products.add(Cart.fromJson(notes));
-      log(products.length.toString());
     }
     return products;
   }
@@ -417,7 +416,12 @@ class _MyHomePageState extends State<MyHomePage> {
                                               ),
                                             )
                                           ),
-                                          onTap: () {},
+                                          onTap: () {
+                                            // setState(() {
+                                              
+                                            // });
+                                            Navigator.pop(context);
+                                          },
                                         ),
                                         const Spacer(flex: 3,),
                                       ],
@@ -644,154 +648,146 @@ class _MyHomePageState extends State<MyHomePage> {
                       Spacer(),
                     ],
                   ),
-                  FutureBuilder(
-                    future: fetchBestSales(),
-                    builder: (context, AsyncSnapshot snapshot) {
-                      
-                      if (bestSales.isNotEmpty) {
-                        return GestureDetector(
-                          child: SizedBox(
-                            child: GridView.builder(
-                              physics: const NeverScrollableScrollPhysics(),
-                              shrinkWrap: true,
-                              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                                crossAxisCount: 2,
-                                crossAxisSpacing: 5.0,
-                                mainAxisSpacing: 5.0,
+                  GestureDetector(
+                    child: SizedBox(
+                      child: GridView.builder(
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 5.0,
+                          mainAxisSpacing: 5.0,
+                        ),
+                        padding: const EdgeInsets.only(top: 10, right: 10, bottom: 8),
+                        itemCount: bestSales.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          return ClipRRect(
+                            child: Container(
+                              width: 170,
+                              margin: const EdgeInsets.only(left: 20, right: 10),
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: AppColors.fillColor,
                               ),
-                              padding: const EdgeInsets.only(top: 10, right: 10, bottom: 8),
-                              itemCount: bestSales.length,
-                              itemBuilder: (BuildContext context, int index) {
-                                return ClipRRect(
-                                  child: Container(
-                                    width: 170,
-                                    margin: const EdgeInsets.only(left: 20, right: 10),
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      color: AppColors.fillColor,
-                                    ),
-                                    child: Column(
-                                      children: <Widget>[
-                                        Stack(
-                                          alignment: Alignment.topRight,
-                                          children: <Widget>[
-                                            // Image(
-                                            //   fit: BoxFit.fitHeight,
-                                            //   height: 150,
-                                            //   width: 150,
-                                            //   image: NetworkImage(bestSales[index].picture),
-                                            // ),
-                                            CachedNetworkImage(
-                                              imageUrl: bestSales[index].picture,
-                                              height: MediaQuery.of(context).size.height * 0.18,
-                                              width: 150,
-                                              fit: BoxFit.fitHeight,
-                                            ),
-                                            Container(
-                                              margin: const EdgeInsets.only(top: 5),
-                                              decoration: const BoxDecoration(
-                                                shape: BoxShape.circle,
-                                                boxShadow: [
-                                                  BoxShadow(
-                                                    color: AppColors.priceColor,
-                                                    spreadRadius: 1,
-                                                    blurRadius: 10,
-                                                  ),
-                                                ],
-                                              ),
-                                              child: CircleAvatar(
-                                                radius: 15,
-                                                backgroundColor: AppColors.fillColor,
-                                                child: IconButton(
-                                                  iconSize: 15,
-                                                  splashRadius: 15,
-                                                  icon: (bestSales[index].isFavorites == true)
-                                                  ? const Icon(
-                                                      Icons.favorite_outlined,
-                                                      color: AppColors.contrastColor,
-                                                    )
-                                                  : const Icon(
-                                                      Icons.favorite_outline,
-                                                      color: AppColors.contrastColor,
-                                                    ),
-                                                  onPressed: () {
-                                                    if (bestSales[index].isFavorites == false) {
-                                                      setState(() {
-                                                        bestSales[index].isFavorites = true;
-                                                      });
-                                                    } else {
-                                                      setState(() {
-                                                        bestSales[index].isFavorites = false;
-                                                      });
-                                                    }
-                                                    log(bestSales[index].isFavorites.toString());
-                                                  },
-                                                ),
-                                              ),
-                                            ),
-                                          ]
-                                        ),
-                                        Row(
-                                          children: [
-                                            const Spacer(
-                                              flex: 2,
-                                            ),
-                                            Text('\$${bestSales[index].discountPrice}',
-                                              style: const TextStyle(
-                                                fontSize: 16,
-                                                color: AppColors.secondaryColor
-                                              ),
-                                              overflow: TextOverflow.fade,
-                                              maxLines: 1,
-                                              softWrap: false,
-                                              textAlign: TextAlign.left,
-                                            ),
-                                            const Spacer(),
-                                            Text('\$${bestSales[index].priceWithoutDiscount}',
-                                              style: const TextStyle(
-                                                fontSize: 11,
-                                                color: AppColors.priceColor,
-                                                decoration: TextDecoration.lineThrough
-                                              ),
-                                              overflow: TextOverflow.fade,
-                                              maxLines: 1,
-                                              softWrap: false,
-                                              textAlign: TextAlign.left,
-                                            ),
-                                            const Spacer(
-                                              flex: 4,
+                              child: Column(
+                                children: <Widget>[
+                                  Stack(
+                                    alignment: Alignment.topRight,
+                                    children: <Widget>[
+                                      // Image(
+                                      //   fit: BoxFit.fitHeight,
+                                      //   height: 150,
+                                      //   width: 150,
+                                      //   image: NetworkImage(bestSales[index].picture),
+                                      // ),
+                                      CachedNetworkImage(
+                                        imageUrl: bestSales[index].picture,
+                                        height: MediaQuery.of(context).size.height * 0.18,
+                                        width: 150,
+                                        fit: BoxFit.fitHeight,
+                                      ),
+                                      Container(
+                                        margin: const EdgeInsets.only(top: 5),
+                                        decoration: const BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          boxShadow: [
+                                            BoxShadow(
+                                              color: AppColors.priceColor,
+                                              spreadRadius: 1,
+                                              blurRadius: 10,
                                             ),
                                           ],
                                         ),
-                                        Text(
-                                          bestSales[index].title,
-                                          style: const TextStyle(
-                                            fontSize: 10,
-                                            color: AppColors.secondaryColor
+                                        child: CircleAvatar(
+                                          radius: 15,
+                                          backgroundColor: AppColors.fillColor,
+                                          child: IconButton(
+                                            iconSize: 15,
+                                            splashRadius: 15,
+                                            icon: (bestSales[index].isFavorites == true)
+                                            ? const Icon(
+                                                Icons.favorite_outlined,
+                                                color: AppColors.contrastColor,
+                                              )
+                                            : const Icon(
+                                                Icons.favorite_outline,
+                                                color: AppColors.contrastColor,
+                                              ),
+                                            onPressed: () {
+                                              if (bestSales[index].isFavorites == false) {
+                                                setState(() {
+                                                  bestSales[index].isFavorites = true;
+                                                });
+                                              } 
+                                              else {
+                                                setState(() {
+                                                  bestSales[index].isFavorites = false;
+                                                });
+                                              }
+                                              log(bestSales[index].isFavorites.toString());
+                                            },
                                           ),
-                                          overflow: TextOverflow.fade,
-                                          maxLines: 1,
-                                          softWrap: false,
-                                          textAlign: TextAlign.left,
                                         ),
-                                      ],
-                                    ),
+                                      ),
+                                    ]
                                   ),
-                                );
-                              }
-                            )
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => const MyItemPage()),
-                            );
-                          },
-                        );
-                      }
-                      return const Center(child: Text("no info"));
+                                  Row(
+                                    children: [
+                                      const Spacer(
+                                        flex: 2,
+                                      ),
+                                      Text('\$${bestSales[index].discountPrice}',
+                                        style: const TextStyle(
+                                          fontSize: 16,
+                                          color: AppColors.secondaryColor
+                                        ),
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                      const Spacer(),
+                                      Text('\$${bestSales[index].priceWithoutDiscount}',
+                                        style: const TextStyle(
+                                          fontSize: 11,
+                                          color: AppColors.priceColor,
+                                          decoration: TextDecoration.lineThrough
+                                        ),
+                                        overflow: TextOverflow.fade,
+                                        maxLines: 1,
+                                        softWrap: false,
+                                        textAlign: TextAlign.left,
+                                      ),
+                                      const Spacer(
+                                        flex: 4,
+                                      ),
+                                    ],
+                                  ),
+                                  Text(
+                                    bestSales[index].title,
+                                    style: const TextStyle(
+                                      fontSize: 10,
+                                      color: AppColors.secondaryColor
+                                    ),
+                                    overflow: TextOverflow.fade,
+                                    maxLines: 1,
+                                    softWrap: false,
+                                    textAlign: TextAlign.left,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          );
+                        }
+                      )
+                    ),
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const MyItemPage()),
+                      );
                     },
-                  )
+                  ),
                 ]
               ),
               bottomNavigationBar: Container(
