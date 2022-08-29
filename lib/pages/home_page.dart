@@ -530,6 +530,9 @@ class _MyHomePageState extends State<MyHomePage> {
                               fontWeight: FontWeight.w400,
                               fontFamily: 'Mark Pro',
                             ),
+                            floatingLabelStyle: const TextStyle(
+                              color: AppColors.contrastColor
+                            ),
                             prefixIcon: const Icon(
                               Icons.search,
                               color: AppColors.contrastColor
