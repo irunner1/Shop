@@ -10,6 +10,7 @@ import '../helpers/item.dart';
 import '../helpers/data.dart';
 import 'dart:convert';
 import 'package:app/pages/splash_screen.dart';
+import 'package:app/pages/home_page_no_splash.dart';
 import 'package:app/pages/cart_page.dart';
 import 'package:dropdown_button2/dropdown_button2.dart';
 
@@ -28,6 +29,7 @@ class _MyHomePageState extends State<MyHomePage> {
   String? selectedBrandValue;
   String? selectedPriceValue;
   String? selectedSizeValue;
+  String? val;
 
   final List<String> filterItems = [
     'Samsung',
@@ -257,6 +259,7 @@ class _MyHomePageState extends State<MyHomePage> {
             onChanged: (value) {
               setState(() {
                 selval = value as String;
+                val = selval;
               });
             },
             icon: const Icon(
@@ -417,10 +420,11 @@ class _MyHomePageState extends State<MyHomePage> {
                                             )
                                           ),
                                           onTap: () {
-                                            // setState(() {
-                                              
-                                            // });
                                             Navigator.pop(context);
+                                            // Navigator.push(
+                                            //   context,
+                                            //   MaterialPageRoute(builder: (context) => MyHome(selectedTitle: val)),
+                                            // );
                                           },
                                         ),
                                         const Spacer(flex: 3,),
@@ -547,7 +551,6 @@ class _MyHomePageState extends State<MyHomePage> {
                               borderRadius: BorderRadius.all(Radius.circular(100)),
                               borderSide: BorderSide(color: AppColors.fillColor, width: 1.0),
                             ),
-                            
                           ),
                         ),
                       ),
@@ -677,12 +680,6 @@ class _MyHomePageState extends State<MyHomePage> {
                                   Stack(
                                     alignment: Alignment.topRight,
                                     children: <Widget>[
-                                      // Image(
-                                      //   fit: BoxFit.fitHeight,
-                                      //   height: 150,
-                                      //   width: 150,
-                                      //   image: NetworkImage(bestSales[index].picture),
-                                      // ),
                                       CachedNetworkImage(
                                         imageUrl: bestSales[index].picture,
                                         height: MediaQuery.of(context).size.height * 0.18,
